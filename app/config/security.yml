@@ -11,9 +11,13 @@ security:
 #     Chef de projet, Directeur de projet, Développeur
 
     firewalls:
+        #login:
+        #    pattern:      ^/login
+        #    anonymous:   true
+
         main:
             pattern:      ^/
-            anonymous:    false
+            anonymous:    true
             provider:     main
             form_login:
                 login_path: login

@@ -2,16 +2,16 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<link rel="stylesheet" href="main.css" />
+	<link rel="stylesheet" href="{{ asset('main.css') }}" />
 </head>
 <header>
 	<div id="logother">
-		<a href="Ecran-login.html"> Login/Disconnect</a>
+		<a href="{{ url('fos_user_security_login') }}"> Login/Disconnect</a>
 	</div>
 	<div>
-		<a href="Ecran-acc.html">
+		<a href="{{ url('core_homepage') }}">
 			<center>   
-				<img alt="Logo" src="LOGOx.png" width="400" height="150"> 
+				<img alt="Logo" src="{{ asset('LOGOx.png') }}" width="400" height="150"> 
 			</center>
 		</a>
 	</div> 
@@ -19,21 +19,20 @@
 <div>   
 </div>  
 <div id="navi">
-	<a class="button-ac">Gestion des Projet</button>
-		<a class="button-ac">Ressources</button>
-			<a class="button-ac">Gestion des Tâches</button>
-			</div>
-			<div>
-				<table id="table-acc"> 
+	<a class="button button-acc">Gestion des Projet</a>
+	<a class="button button-acc">Ressources</a>
+	<a class="button button-acc">Gestion des Tâches</a>
+	</div>
+	<div>
+		<table id="table-acc">
 
-					<caption> Accueil </caption>
+			<caption> Accueil </caption>
 
-					{% for project in projects %}
-					<tr><td>{{ project.name }}</td></tr>
-					{% endfor %}
+				{% for project in projects %}
+				<tr><td>{{ project.name }}</td></tr>
+				{% endfor %}
 
-				</table>
-			</div>  
-			<footer></footer>
-			<br/>
-			</html>
+		</table>
+	</div>  
+	<footer></footer>
+</html>

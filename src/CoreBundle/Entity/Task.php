@@ -2,43 +2,57 @@
 
 namespace CoreBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Task
+ *
+ * @ORM\Table(name="task")
+ * @ORM\Entity(repositoryClass="CoreBundle\Repository\TaskRepository")
  */
 class Task
 {
     /**
      * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
 
     /**
      * @var int
+     *
+     * @ORM\Column(name="project_id", type="integer")
      */
     private $projectId;
 
     /**
-     * @var int
+     * @var float
+     *
+     * @ORM\Column(name="initial_workload", type="float")
      */
-    private $advancement;
+    private $initialWorkload;
 
     /**
      * @var float
-     */
-    private $initialWokload;
-
-    /**
-     * @var float
+     *
+     * @ORM\Column(name="consumed_workload", type="float")
      */
     private $consumedWorkload;
 
     /**
      * @var float
+     *
+     * @ORM\Column(name="left_to_do", type="float")
      */
     private $leftToDo;
 
@@ -102,51 +116,27 @@ class Task
     }
 
     /**
-     * Set advancement
+     * Set initialWorkload
      *
-     * @param integer $advancement
+     * @param float $initialWorkload
      *
      * @return Task
      */
-    public function setAdvancement($advancement)
+    public function setInitialWorkload($initialWorkload)
     {
-        $this->advancement = $advancement;
+        $this->initialWorkload = $initialWorkload;
 
         return $this;
     }
 
     /**
-     * Get advancement
-     *
-     * @return int
-     */
-    public function getAdvancement()
-    {
-        return $this->advancement;
-    }
-
-    /**
-     * Set initialWokload
-     *
-     * @param float $initialWokload
-     *
-     * @return Task
-     */
-    public function setInitialWokload($initialWokload)
-    {
-        $this->initialWokload = $initialWokload;
-
-        return $this;
-    }
-
-    /**
-     * Get initialWokload
+     * Get initialWorkload
      *
      * @return float
      */
-    public function getInitialWokload()
+    public function getInitialWorkload()
     {
-        return $this->initialWokload;
+        return $this->initialWorkload;
     }
 
     /**

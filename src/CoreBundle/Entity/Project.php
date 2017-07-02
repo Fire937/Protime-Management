@@ -2,50 +2,80 @@
 
 namespace CoreBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Project
+ *
+ * @ORM\Table(name="project")
+ * @ORM\Entity(repositoryClass="CoreBundle\Repository\ProjectRepository")
  */
 class Project
 {
     /**
      * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
 
     /**
      * @var int
+     *
+     * @ORM\Column(name="referent_id", type="integer")
      */
     private $referentId;
 
     /**
      * @var int
+     *
+     * @ORM\Column(name="responsible_id", type="integer", nullable=true)
      */
     private $responsibleId;
 
     /**
      * @var float
+     *
+     * @ORM\Column(name="cost_to_deliver", type="float")
      */
     private $costToDeliver;
 
     /**
      * @var float
+     *
+     * @ORM\Column(name="sell_cost", type="float")
      */
     private $sellCost;
 
     /**
-     * @var float
+     * @var int
+     *
+     * @ORM\Column(name="gain", type="float", nullable=true)
      */
     private $gain;
 
     /**
      * @var int
+     *
+     * @ORM\Column(name="progress", type="integer")
      */
-    private $resourcesAvarageNumber;
+    private $progress;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="resource_average_number", type="integer")
+     */
+    private $resourceAverageNumber;
 
 
     /**
@@ -181,7 +211,7 @@ class Project
     /**
      * Set gain
      *
-     * @param float $gain
+     * @param integer $gain
      *
      * @return Project
      */
@@ -195,7 +225,7 @@ class Project
     /**
      * Get gain
      *
-     * @return float
+     * @return int
      */
     public function getGain()
     {
@@ -203,27 +233,51 @@ class Project
     }
 
     /**
-     * Set resourcesAvarageNumber
+     * Set progress
      *
-     * @param integer $resourcesAvarageNumber
+     * @param integer $progress
      *
      * @return Project
      */
-    public function setResourcesAvarageNumber($resourcesAvarageNumber)
+    public function setProgress($progress)
     {
-        $this->resourcesAvarageNumber = $resourcesAvarageNumber;
+        $this->progress = $progress;
 
         return $this;
     }
 
     /**
-     * Get resourcesAvarageNumber
+     * Get progress
      *
      * @return int
      */
-    public function getResourcesAvarageNumber()
+    public function getProgress()
     {
-        return $this->resourcesAvarageNumber;
+        return $this->progress;
+    }
+
+    /**
+     * Set resourceAverageNumber
+     *
+     * @param integer $resourceAverageNumber
+     *
+     * @return Project
+     */
+    public function setResourceAverageNumber($resourceAverageNumber)
+    {
+        $this->resourceAverageNumber = $resourceAverageNumber;
+
+        return $this;
+    }
+
+    /**
+     * Get resourceAverageNumber
+     *
+     * @return int
+     */
+    public function getResourceAverageNumber()
+    {
+        return $this->resourceAverageNumber;
     }
 }
 

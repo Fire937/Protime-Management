@@ -1,3 +1,29 @@
 <!DOCTYPE html>
+
 <html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="{{ asset('main.css') }}" />
+</head>
+
+<body>
+	<header>
+		<div id="logother">
+			<a href="{{ url('fos_user_security_logout') }}">Logout</a>
+		</div>
+		<div>
+			<a href="{{ url('core_homepage') }}">
+				<center>   
+					<img alt="Logo" src="{{ asset('LOGOx.png') }}" width="400" height="150"> 
+				</center>
+			</a>
+		</div>
+	</header>
+
+	<div id="content">
+		{% block content %}{% endblock %}
+	</div>
+
+	<footer></footer>
+</body>
 </html>

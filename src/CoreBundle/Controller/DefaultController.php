@@ -8,8 +8,10 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
+        $user = $this->getUser();
+
         return $this->render('CoreBundle::index.html.twig', array(
-            'projects' => array(array('name' => 'Hello World'))
+            'projects' => array()//$user->findProjects()
             ));
     }
 

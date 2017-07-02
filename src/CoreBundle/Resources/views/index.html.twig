@@ -1,38 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<link rel="stylesheet" href="{{ asset('main.css') }}" />
-</head>
-<header>
-	<div id="logother">
-		<a href="{{ url('fos_user_security_login') }}"> Login/Disconnect</a>
-	</div>
-	<div>
-		<a href="{{ url('core_homepage') }}">
-			<center>   
-				<img alt="Logo" src="{{ asset('LOGOx.png') }}" width="400" height="150"> 
-			</center>
-		</a>
-	</div> 
-</header>            
-<div>   
+ {% extends 'CoreBundle::layout.html.twig' %}
+
+{% block content %}
+ <div id="navi">
+	<a class="button button-acc" href="{{ url('core_project') }}">Gestion des Projet</a>
+	<a class="button button-acc" href="{{ url('core_resource') }}">Ressources</a>
+	<a class="button button-acc" href="{{ url('core_task') }}">Gestion des Tâches</a>
+</div>
+
+<div>
+	<table id="table-acc">
+
+		<caption> Accueil </caption>
+
+		{% for project in projects %}
+		<tr><td>{{ project.name }}</td></tr>
+		{% endfor %}
+
+	</table>
 </div>  
-<div id="navi">
-	<a class="button button-acc">Gestion des Projet</a>
-	<a class="button button-acc">Ressources</a>
-	<a class="button button-acc">Gestion des Tâches</a>
-	</div>
-	<div>
-		<table id="table-acc">
-
-			<caption> Accueil </caption>
-
-				{% for project in projects %}
-				<tr><td>{{ project.name }}</td></tr>
-				{% endfor %}
-
-		</table>
-	</div>  
-	<footer></footer>
-</html>
+{% endblock %}

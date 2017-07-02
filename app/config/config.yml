@@ -74,7 +74,7 @@ swiftmailer:
 fos_user:
     db_driver:     orm
     firewall_name: main
-    user_class:    OC\UserBundle\Entity\User
+    user_class:    UserBundle\Entity\Resource
     from_email:
         address:        noreply@protimemanagementx.com
         sender_name:    Protime Management

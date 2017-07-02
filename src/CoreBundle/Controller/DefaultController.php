@@ -16,9 +16,9 @@ class DefaultController extends Controller
     	return $this->render('CoreBundle:project.php');
     }
 
-    public function ressourceAction()
+    public function resourceAction()
     {
-    	return $this->render('CoreBundle:ressources.php');
+    	return $this->render('CoreBundle:resources.php');
     }
 
     public function taskAction()

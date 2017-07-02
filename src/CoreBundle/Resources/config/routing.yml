@@ -3,13 +3,13 @@ core_homepage:
     defaults: { _controller: CoreBundle:Default:index }
 
 core_project:
-    path:     /
+    path:     /project
     defaults: { _controller: CoreBundle:Default:project }
 
-core_ressource:
-    path:     /
-    defaults: { _controller: CoreBundle:Default:ressource }
+core_resource:
+    path:     /resource
+    defaults: { _controller: CoreBundle:Default:resource }
 
 core_task:
-    path:     /
+    path:     /task
     defaults: { _controller: CoreBundle:Default:task }

@@ -2,7 +2,7 @@
 # https://symfony.com/doc/current/security.html
 security:
     encoders:
-        UserBundle\Entity\Resource.php: sha512
+        UserBundle\Entity\Resource: sha512
 
     providers:
         main:
@@ -11,23 +11,31 @@ security:
 #     Chef de projet, Directeur de projet, Développeur
 
     firewalls:
-        main:
-            pattern:      ^/
-            anonymous:    true
-            provider:     main
-            form_login:
-                login_path: login
-                check_path: login_check
-            logout:
-                path:       logout
-                target:     login
-            remember_me:
-                secret:     %secret%
-
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        register:
+            pattern:      ^/register
+            anonymous: true
+
+        login:
+            pattern:      ^/(login|register)$
+            anonymous:    ~
+
+        main:
+            pattern:      ^/
+            anonymous:    false
+            provider:     main
+            form_login:
+                login_path: fos_user_security_login
+                check_path: fos_user_security_check
+            logout:
+                path:       fos_user_security_logout
+                target:     fos_user_security_login
+            remember_me:
+                secret:     %secret%
 
     # activate different ways to authenticate
 

@@ -1,45 +1,21 @@
-<!DOCTYPE html>
-<html>
-        <head>
-            <meta charset="utf-8">
-            <link rel="stylesheet" href="main.css" />
-        </head>
-    <header>
-         <div id="logother">
-                    <a href="Ecran-login.html"> Login/Disconnect</a>
-              </div>
-          <div>
-            <a href="Ecran-acc.html">
-                <center>   
-                       <img alt="Logo" src="LOGOx.png" width="400" height="150"> 
-                </center>
-            </a>
-        </div> 
-    </header>            
-  <div>   
-  </div>  
-     <div id="navi">
-         <button id="button-acc" class="button">Gestion des Projet</button>
-         <button id="button-acc" class="button">Ressources</button>
-         <button id="button-acc" class="button">Gestion des Tâches</button>
-    </div>
-        <div>
-            <table id="table-acc"> 
-                
-                   <caption> Acceuil </caption>
-                
-                    <tr><td> Projet 1</td></tr>               
-    
-                    <tr><td> Feedback Maj</td></tr> 
-    
-                    <tr><td> Projet 2</td></tr>
-    
-                    <tr><td> Projet 3</td></tr>
-   
-                    <tr><td> Projet 4</td></tr>
+ {% extends 'CoreBundle::layout.html.twig' %}
 
-            </table>    
-        </div>  
-    <footer></footer>
-    <br/>
-</html>
+{% block content %}
+ <div id="navi">
+	<a class="button button-acc" href="{{ url('core_project') }}">Gestion des Projet</a>
+	<a class="button button-acc" href="{{ url('core_resource') }}">Ressources</a>
+	<a class="button button-acc" href="{{ url('core_task') }}">Gestion des Tâches</a>
+</div>
+
+<div>
+	<table id="table-acc">
+
+		<caption> Accueil </caption>
+
+		{% for project in projects %}
+		<tr><td>{{ project.name }}</td></tr>
+		{% endfor %}
+
+	</table>
+</div>  
+{% endblock %}

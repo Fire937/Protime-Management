@@ -1,0 +1,190 @@
+body {
+    
+  margin: 0;
+  background-color: skyblue;
+  text-align: center;
+}
+
+                                    /* header  */
+header{
+
+    height: 230px;
+    background-color: dodgerblue;
+    margin-bottom: 100px;
+}
+
+#logother{
+    
+    float: right;
+    padding: 5px 5px 5px;
+}
+
+ 
+img{
+
+    margin-left: 125px;
+     margin-top: 20px;  
+    text-align: center;
+    height: 180px;
+    background-color:transparent;
+}
+
+
+                                 /*  Table  */
+ table{
+
+    border: 1px solid ;
+    border-collapse: collapse;
+    margin: auto;  
+    font-size: 20px;
+ }
+
+input[type=checkbox]{
+    
+    height: 40px;
+    width: 40px;
+}
+
+caption {
+    
+    padding: 40px;
+    font-weight:bold;
+    font-size: 40px;
+}
+
+
+ th{
+    padding: 20px;
+    font-size: 30px;
+    border: 1px solid black;
+    background-color:deepskyblue;
+ }
+
+td{
+ 
+    padding: 20px;
+    border: 3px solid dodgerblue;
+    width: 20px; 
+    height: 50px;
+}
+
+#table-acc{ 
+    
+    width: 30%;  
+    text-align: left;
+    margin-bottom: 150px;
+} 
+
+#table-acc * td{    
+    
+    padding: inherit;
+    text-indent: 20px;
+}
+
+
+tr:hover{ background-color: #f5f5f5;}
+
+td:hover{ background-color: powderblue;}
+
+ 
+
+
+                              /*  buttons  */
+#button-acc{
+    
+    display: inline-block;
+    
+}
+
+
+div.btn-group{
+    
+    position: fixed;
+    bottom: 20px;
+    padding-left: 250px;
+    padding-bottom:30px;
+    
+}
+
+button{
+    
+    background-color: #4CAF50; 
+    color: white;
+    border:1px solid black;
+    font-size: 16px; 
+    cursor: pointer; 
+    display: block;
+    padding: 10px 10px;
+    width: 200px;
+ }
+
+
+ 
+#button-other:active{   width: 240px;   }
+
+#button-acc:active{   transform: translateY(5px);   }
+
+
+                                  /* Form  */
+
+
+form label  {  font-weight:bold;   }
+
+form{
+    
+    margin-top: 150px;
+    padding-top: 50px;
+}
+
+form div{
+
+    text-align: center;
+    padding-bottom: 50px;
+}
+
+input[type=text], select {
+    
+    padding: 12px 20px;
+    margin: 20px 0;
+    margin: 20px 0;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    box-sizing: border-box;
+}
+
+input[type=password], select {
+    
+    padding: 12px 20px;
+    margin: 20px 0;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    box-sizing: border-box;
+}
+
+input[type=submit] {
+    
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 30px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+&:active {
+
+  transform: translateY(5px); 
+  background-color: #4CAF10;   
+}
+
+                              /* Footer  */
+footer{
+    
+    background-color: dodgerblue;
+    margin-top: 80px;
+    width:100%;
+    height:50px;  
+    box-shadow: 0px 1500px 0px 1500px #1E90FF;
+}
+

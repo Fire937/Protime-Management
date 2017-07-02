@@ -35,6 +35,26 @@ class Resource extends BaseUser
      * @ORM\Column(name="lastName", type="string", length=255)
      */
     private $lastName;
+  
+    /**
+     * @ORM\OneToMany(targetEntity="CoreBundle\Entity\Project", mappedBy="referent")
+     */
+    private $referent_projects;
+
+    public function __construct()
+    {
+        $this->$referent_projects = new ArrayCollection();
+    }
+  
+    /**
+     * @ORM\OneToMany(targetEntity="CoreBundle\Entity\Project", mappedBy="responsible")
+     */
+    private $responsible_projects;
+
+    public function __construct()
+    {
+        $this->$responsible_projects = new ArrayCollection();
+    }
 
 
     /**

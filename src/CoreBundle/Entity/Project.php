@@ -34,6 +34,12 @@ class Project
      * @ORM\Column(name="referent_id", type="integer")
      */
     private $referentId;
+  
+    /**
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\Resource", inversedBy="projects")
+     * @ORM\JoinColumn(name="referent_id", referencedColumnName="id")
+     */
+    private $referent;
 
     /**
      * @var int
@@ -41,6 +47,12 @@ class Project
      * @ORM\Column(name="responsible_id", type="integer", nullable=true)
      */
     private $responsibleId;
+  
+    /**
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\Resource", inversedBy="projects")
+     * @ORM\JoinColumn(name="responsible_id", referencedColumnName="id")
+     */
+    private $responsible;
 
     /**
      * @var float

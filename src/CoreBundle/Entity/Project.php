@@ -76,6 +76,16 @@ class Project
      * @ORM\Column(name="resource_average_number", type="integer")
      */
     private $resourceAverageNumber;
+  
+    /**
+     * @ORM\OneToMany(targetEntity="Task", mappedBy="project")
+     */
+    private $tasks;
+
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+    }
 
 
     /**
@@ -279,5 +289,38 @@ class Project
     {
         return $this->resourceAverageNumber;
     }
-}
 
+    /**
+     * Add task
+     *
+     * @param \CoreBundle\Entity\Task $task
+     *
+     * @return Project
+     */
+    public function addTask(\CoreBundle\Entity\Task $task)
+    {
+        $this->tasks[] = $task;
+
+        return $this;
+    }
+
+    /**
+     * Remove task
+     *
+     * @param \CoreBundle\Entity\Task $task
+     */
+    public function removeTask(\CoreBundle\Entity\Task $task)
+    {
+        $this->tasks->removeElement($task);
+    }
+
+    /**
+     * Get tasks
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTasks()
+    {
+        return $this->tasks;
+    }
+}

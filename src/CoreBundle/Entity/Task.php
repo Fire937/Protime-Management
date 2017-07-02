@@ -30,7 +30,6 @@ class Task
 
     /**
      * @var int
-     *
      * @ORM\Column(name="project_id", type="integer")
      */
     private $projectId;
@@ -55,6 +54,13 @@ class Task
      * @ORM\Column(name="left_to_do", type="float")
      */
     private $leftToDo;
+  
+    /**
+     * @ORM\ManyToOne(targetEntity="Project", inversedBy="tasks")
+     * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
+     */
+  
+    private $project;
 
 
     /**
@@ -186,5 +192,28 @@ class Task
     {
         return $this->leftToDo;
     }
-}
 
+    /**
+     * Set project
+     *
+     * @param \CoreBundle\Entity\Project $project
+     *
+     * @return Task
+     */
+    public function setProject(\CoreBundle\Entity\Project $project = null)
+    {
+        $this->project = $project;
+
+        return $this;
+    }
+
+    /**
+     * Get project
+     *
+     * @return \CoreBundle\Entity\Project
+     */
+    public function getProject()
+    {
+        return $this->project;
+    }
+}

@@ -14,6 +14,13 @@ use FOS\UserBundle\Model\User as BaseUser;
 class Resource extends BaseUser
 {
     /**
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="firstName", type="string", length=255)
@@ -36,11 +43,19 @@ class Resource extends BaseUser
      * @ORM\OneToMany(targetEntity="CoreBundle\Entity\Project", mappedBy="responsible")
      */
     private $responsible_projects;
+  
+    /**
+     * Many Resources have Many Tasks.
+     * @ORM\ManyToMany(targetEntity="CoreBundle\Entity\Project", inversedBy="resources")
+     * @ORM\JoinTable(name="resources_tasks")
+     */
+    private $tasks;
 
     public function __construct()
     {
         $this->$referent_projects = new ArrayCollection();
         $this->$responsible_projects = new ArrayCollection();
+        $this->tasks = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -167,5 +182,39 @@ class Resource extends BaseUser
     public function getResponsibleProjects()
     {
         return $this->responsible_projects;
+    }
+
+    /**
+     * Add task
+     *
+     * @param \CoreBundle\Entity\Project $task
+     *
+     * @return Resource
+     */
+    public function addTask(\CoreBundle\Entity\Project $task)
+    {
+        $this->tasks[] = $task;
+
+        return $this;
+    }
+
+    /**
+     * Remove task
+     *
+     * @param \CoreBundle\Entity\Project $task
+     */
+    public function removeTask(\CoreBundle\Entity\Project $task)
+    {
+        $this->tasks->removeElement($task);
+    }
+
+    /**
+     * Get tasks
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTasks()
+    {
+        return $this->tasks;
     }
 }

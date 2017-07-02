@@ -59,8 +59,17 @@ class Task
      * @ORM\ManyToOne(targetEntity="Project", inversedBy="tasks")
      * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
      */
-  
     private $project;
+    
+    /**
+     * Many Tasks have Many Resources.
+     * @ORM\ManyToMany(targetEntity="UserBundle\Entity\Resource", mappedBy="resources")
+     */
+    private $resources;
+
+    public function __construct() {
+        $this->resources = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
 
     /**
@@ -215,5 +224,39 @@ class Task
     public function getProject()
     {
         return $this->project;
+    }
+
+    /**
+     * Add resource
+     *
+     * @param \UserBundle\Entity\Resource $resource
+     *
+     * @return Task
+     */
+    public function addResource(\UserBundle\Entity\Resource $resource)
+    {
+        $this->resources[] = $resource;
+
+        return $this;
+    }
+
+    /**
+     * Remove resource
+     *
+     * @param \UserBundle\Entity\Resource $resource
+     */
+    public function removeResource(\UserBundle\Entity\Resource $resource)
+    {
+        $this->resources->removeElement($resource);
+    }
+
+    /**
+     * Get resources
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getResources()
+    {
+        return $this->resources;
     }
 }

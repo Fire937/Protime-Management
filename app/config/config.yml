@@ -78,3 +78,6 @@ fos_user:
     from_email:
         address:        noreply@protimemanagementx.com
         sender_name:    Protime Management
+    registration:
+        form:
+            type: UserBundle\Form\RegistrationType

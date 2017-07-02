@@ -8,7 +8,7 @@ security:
         main:
             id: fos_user.user_provider.username
 
-#     Chef de projet, Directeur de projet, Développeur
+#     Chef de projet, Directeur de projet, Développeur  CHEF DIRECTEUR DEV
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -18,10 +18,10 @@ security:
 
         register:
             pattern:      ^/register
-            anonymous: true
+            anonymous: ~
 
         login:
-            pattern:      ^/(login|register)$
+            pattern:      ^/login$
             anonymous:    ~
 
         main:

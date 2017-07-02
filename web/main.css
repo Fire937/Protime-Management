@@ -141,7 +141,7 @@ form div{
     padding-bottom: 50px;
 }
 
-input[type=text], select {
+input[type=text], input[type=email], select {
     
     padding: 12px 20px;
     margin: 20px 0;

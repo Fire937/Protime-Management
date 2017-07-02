@@ -8,7 +8,9 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('CoreBundle::index.html.twig');
+        return $this->render('CoreBundle::index.html.twig', array(
+            'projects' => array(array('name' => 'Hello World'))
+            ));
     }
 
     public function projectAction()

@@ -13,7 +13,7 @@ security:
     firewalls:
         main:
             pattern:      ^/
-            anonymous:    true
+            anonymous:    false
             provider:     main
             form_login:
                 login_path: login

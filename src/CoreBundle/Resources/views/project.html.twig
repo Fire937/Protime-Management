@@ -14,8 +14,9 @@
 
 		{% for project in projects %}
 		<tr>
-			<td>project.name</td>
-			<td>project.progress%</td>
+			<td>{{ project.name }}</td>
+			<td>{{ project.progress }}%</td>
+			<td>La Mort</td>
 			<td><a href="{{ url('') }}">Supprimer</a></td>
 		</tr>
 		{% endfor %}

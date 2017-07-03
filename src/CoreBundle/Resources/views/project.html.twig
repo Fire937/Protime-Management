@@ -7,16 +7,26 @@
 		<caption> Gestion des Projets </caption>
 		<tr> 
 			<th>Nom Projet</th> 
-			<th>Avancement</th> 
-			<th>Ressources affectés</th>
-			<th>Action</th>    
+			<th>Référent</th>
+			<th>Responsable</th>
+			<th>Coût réel</th>
+			<th>Coût vendu</th>
+			<th>Avancement</th>
+			<th>Gain</th>
+			<th>Nombre de resources moyennes</th>
+			<th>Action</th>
 		</tr>
 
 		{% for project in projects %}
 		<tr>
 			<td>{{ project.name }}</td>
+			<td>{{ project.referent.username }}</td>
+			<td>{{ project.responsible.username }}</td>
+			<td>{{ project.costToDeliver }}</td>
+			<td>{{ project.sellCost }}</td>
 			<td>{{ project.progress }}%</td>
-			<td>La Mort</td>
+			<td>{{ project.gain }}</td>
+			<td>{{ project.resourceAverageNumber }}</td>
 			<td><a href="{{ url('core_project_delete', { id: project.id }) }}">Supprimer</a></td>
 		</tr>
 		{% endfor %}

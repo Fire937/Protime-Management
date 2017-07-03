@@ -10,4 +10,12 @@ namespace UserBundle\Repository;
  */
 class ResourceRepository extends \Doctrine\ORM\EntityRepository
 {
+	public function findResources()
+	{
+		return $this->getEntityManager()
+			->createQuery(
+				'SELECT r FROM resources INNER JOIN resources_tasks rt ON r.id = rt.user_id INNER JOIN tasks t ON rt.task_id = t.id WHERE t.project_id = ?1'
+			)->setParameter(1, $resource->getId())
+			->getResult();
+	}
 }

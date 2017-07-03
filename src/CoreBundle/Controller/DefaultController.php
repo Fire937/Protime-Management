@@ -70,16 +70,26 @@ class DefaultController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
 
-        $project = $em->getRepository('CoreBundle:Project')->findById($id);
+        $project = $em->getRepository('CoreBundle:Project')->findOneById($id);
 
-        if ($project)
+        if ($project && $projet->getReferent() === $this->getUser())
         {
             $em->remove($project);
             $em->flush();
         }
-        // if project doesn't exist, then do nothing and just redirect, we could send 404 error if we were really bothered
+        // if project doesn't exist or user doesn't have the rights, then do nothing and just redirect, we could send 404 error if we were really bothered
 
         return $this->redirectToRoute('core_project');
+    }
+
+    public function editProjectAction($id)
+    {
+        $editProjectForm = $this->createForm(FormType::class)
+            ->add('name');
+
+        return $this->render('CoreBundle::edit-project.html.twig', array(
+            'editProjectForm' => $editProjectForm->createView()
+            ));
     }
 
     public function resourceAction()

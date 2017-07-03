@@ -112,7 +112,9 @@ class DefaultController extends Controller
 
     public function resourceAction()
     {
-    	return $this->render('CoreBundle::resource.html.twig');
+    	return $this->render('CoreBundle::resource.html.twig', array(
+            
+            ));
     }
 
     public function taskAction()

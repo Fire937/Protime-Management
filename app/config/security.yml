@@ -2,13 +2,16 @@
 # https://symfony.com/doc/current/security.html
 security:
     encoders:
-        UserBundle\Entity\Resource: sha512
+        UserBundle\Entity\User: sha512
+
+    #role_hierarchy:
+
 
     providers:
         main:
-            id: fos_user.user_provider.username
+            id: UserBundle\Security\UserProvider
 
-#     Chef de projet, Directeur de projet, Développeur  CHEF DIRECTEUR DEV
+#     Chef de projet, Directeur de projet, Développeur  CP DP DEV
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -20,9 +23,9 @@ security:
             pattern:      ^/register
             anonymous:    ~
 
-        forgot:
-            pattern:      ^/resetting
-            anonymous:   ~
+        # forgot:
+        #     pattern:      ^/resetting
+        #     anonymous:   ~
 
         login:
             pattern:      ^/login$
@@ -33,13 +36,13 @@ security:
             anonymous:    false
             provider:     main
             form_login:
-                login_path: fos_user_security_login
-                check_path: fos_user_security_check
+                login_path: user_login
+                check_path: user_login_check
             logout:
-                path:       fos_user_security_logout
-                target:     fos_user_security_login
-            remember_me:
-                secret:     %secret%
+                path:       user_logout
+                target:     user_login
+            #remember_me:
+            #    secret:     '%secret%'
 
     # activate different ways to authenticate
 

@@ -1,4 +1,4 @@
-{% trans_default_domain 'FOSUserBundle' %}
+{% extends 'CoreBundle::layout.html.twig' %}
 
 {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'fos_user_registration_register'}}) }}
     <div>

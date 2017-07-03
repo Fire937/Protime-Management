@@ -183,38 +183,4 @@ class Resource extends BaseUser
     {
         return $this->responsible_projects;
     }
-
-    /**
-     * Add task
-     *
-     * @param \CoreBundle\Entity\Project $task
-     *
-     * @return Resource
-     */
-    public function addTask(\CoreBundle\Entity\Project $task)
-    {
-        $this->tasks[] = $task;
-
-        return $this;
-    }
-
-    /**
-     * Remove task
-     *
-     * @param \CoreBundle\Entity\Project $task
-     */
-    public function removeTask(\CoreBundle\Entity\Project $task)
-    {
-        $this->tasks->removeElement($task);
-    }
-
-    /**
-     * Get tasks
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTasks()
-    {
-        return $this->tasks;
-    }
 }

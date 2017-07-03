@@ -82,9 +82,7 @@ class Project
 
     public function __construct()
     {
-        $this->tasks = new ArrayCollection();
-
-        $progress = 0;
+        $this->setProgress(0);
     }
 
 

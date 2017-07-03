@@ -21,9 +21,16 @@
 	</table>
 </div>
 
-<div id="div-but" class="btn-group" style="display: block; margin: 0 auto;">
+{{ form_start(form) }}
+{{ form_widget(form) }}
+<div>
+	<input type="submit"/>
+</div>
+{{ form_end(form) }}
+
+{#<div id="div-but" class="btn-group" style="display: block; margin: 0 auto;">
 	<button id="button-other" class="button">Créer une tâche</button>
 	<button id="button-other" class="button">Supprimer une tâche</button>
 	<button id="button-other" class="button">Modifier une tâche</button>
-</div>
+</div>#}
 {% endblock %}

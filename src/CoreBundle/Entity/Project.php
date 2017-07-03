@@ -97,6 +97,8 @@ class Project
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
+
+        $progress = 0;
     }
 
 

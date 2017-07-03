@@ -8,13 +8,15 @@
 		<tr> 
 			<th>Nom Projet</th> 
 			<th>Avancement</th> 
-			<th>Ressources affectés</th>    
+			<th>Ressources affectés</th>
+			<th>Action</th>    
 		</tr>
 
 		{% for project in projects %}
 		<tr>
 			<td>project.name</td>
 			<td>project.progress%</td>
+			<td><a href="{{ url('') }}">Supprimer</a></td>
 		</tr>
 		{% endfor %}
 		

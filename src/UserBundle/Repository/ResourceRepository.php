@@ -12,10 +12,17 @@ class ResourceRepository extends \Doctrine\ORM\EntityRepository
 {
    public function findProjects($resource)
     {
-      return $this->getEntityManager()
-            ->createQuery(
-                'SELECT p FROM CoreBundle:projects p INNER JOIN CoreBundle:tasks t ON p.id = t.project_id INNER JOIN resources_tasks ON t.id = resources_tasks.task_id WHERE tasks_users.resources_id = ?1'
-            )->setParameter(1, $resource->getId())
-            ->getResult();
+        $qb = $this->createQueryBuilder('p');
+
+        return $qb
+            ->join('p.tasks', 't')
+            ->join('t.resources', 'r')
+            ->where($qb->expr()->eq('r', ':resource'))
+
+            ->setParameter('resource', $resource)
+
+            ->getQuery()
+            ->getResult()
+            ;
     }
 }

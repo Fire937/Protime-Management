@@ -17,7 +17,7 @@ class DefaultController extends Controller
         $resource = $this->getUser();
 
         return $this->render('CoreBundle::index.html.twig', array(
-            'projects' => $this->get('doctrine.orm.entity_manager')->getRepository('UserBundle:Resource')->findProjects($resource),
+            'projects' => $this->get('doctrine.orm.entity_manager')->getRepository('CoreBundle:Project')->findProjects($resource),
             ));
     }
 
@@ -61,7 +61,7 @@ class DefaultController extends Controller
         }
 
     	return $this->render('CoreBundle::project.html.twig', array(
-            'projects'          => $this->get('doctrine.orm.entity_manager')->getRepository('UserBundle:Resource')->findProjects($resource),
+            'projects'          => $this->get('doctrine.orm.entity_manager')->getRepository('CoreBundle:Project')->findProjects($resource),
             'createProjectForm' => $createProjectForm->createView(),
             ));
     }

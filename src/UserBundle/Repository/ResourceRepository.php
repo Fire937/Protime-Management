@@ -10,19 +10,4 @@ namespace UserBundle\Repository;
  */
 class ResourceRepository extends \Doctrine\ORM\EntityRepository
 {
-   public function findProjects($resource)
-    {
-        $qb = $this->createQueryBuilder('p');
-
-        return $qb
-            ->join('p.tasks', 't')
-            ->join('t.resources', 'r')
-            ->where($qb->expr()->eq('r', ':resource'))
-
-            ->setParameter('resource', $resource)
-
-            ->getQuery()
-            ->getResult()
-            ;
-    }
 }

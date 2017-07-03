@@ -5,6 +5,8 @@ namespace UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 
+use Doctrine\Common\Collections\Collection;
+
 /**
  * Resource
  *
@@ -53,9 +55,6 @@ class Resource extends BaseUser
 
     public function __construct()
     {
-        $this->$referent_projects = new ArrayCollection();
-        $this->$responsible_projects = new ArrayCollection();
-        $this->tasks = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

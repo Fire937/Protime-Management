@@ -19,7 +19,7 @@
 
 		{% for project in projects %}
 		<tr>
-			<td>{{ project.name }}</td>
+			<td><a href="{{ url('core_project_edit', { id: project.id }) }}">{{ project.name }}</a></td>
 			<td>{{ project.referent.username }}</td>
 			<td>{{ project.responsible.username }}</td>
 			<td>{{ project.costToDeliver }}</td>
@@ -40,10 +40,4 @@
 	<input type="submit"/>
 </div>
 {{ form_end(createProjectForm) }}
-
-{#<div id="div-but" class="btn-group" style="display: block; margin: 0 auto;">
-	<button id="button-other" class="button">Créer une tâche</button>
-	<button id="button-other" class="button">Supprimer une tâche</button>
-	<button id="button-other" class="button">Modifier une tâche</button>
-</div>#}
 {% endblock %}

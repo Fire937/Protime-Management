@@ -25,7 +25,8 @@ class DefaultController extends Controller
     {
         $resource = $this->getUser();
 
-        $createProjectForm = $this->createForm(FormType::class)
+        $project = new Project();
+        $createProjectForm = $this->createForm(FormType::class, $project)
             ->add('name')
             ->add('referent', EntityType::class, array(
                 'class'         => 'UserBundle:Resource',
@@ -40,18 +41,7 @@ class DefaultController extends Controller
         if ($createProjectForm->handleRequest($request)->isSubmitted() 
             && $createProjectForm->isValid()) 
         {
-            $projectData = $createProjectForm->getData();
-
-            $project = new Project();
-            $project
-                ->setName($projectData['name'])
-                ->setReferent($projectData['referent'])
-                ->setCostToDeliver($projectData['costToDeliver'])
-                ->setSellCost($projectData['sellCost'])
-                ->setGain($projectData['gain'])
-                ->setResourceAverageNumber($projectData['resourceAverageNumber'])
-                ->setResponsible($resource)
-                ;
+            $project->setResponsible($resource);
 
             $em = $this->get('doctrine.orm.entity_manager');
             $em->persist($project);
@@ -82,10 +72,38 @@ class DefaultController extends Controller
         return $this->redirectToRoute('core_project');
     }
 
-    public function editProjectAction($id)
+    public function editProjectAction($id, Request $request)
     {
-        $editProjectForm = $this->createForm(FormType::class)
-            ->add('name');
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        $project = $em->getRepository('CoreBundle:Project')->findOneById($id);
+
+        if ($project->getReferent() !== $this->getUser()) 
+        {
+            throw $this->createAccessDeniedException("Vous ne pouvez pas modifier les projets dans lesquels vous n'êtes pas le chef de projet");
+        }
+
+        // Yes, same form than in projectAction but creating a FormType is a pain
+        $editProjectForm = $this->createForm(FormType::class, $project)
+            ->add('name')
+            ->add('referent', EntityType::class, array(
+                'class'         => 'UserBundle:Resource',
+                'choice_label'  => 'username',
+                ))
+            ->add('costToDeliver')
+            ->add('sellCost')
+            ->add('gain')
+            ->add('resourceAverageNumber')
+            ;
+
+        if ($editProjectForm->handleRequest($request)->isSubmitted() 
+            && $editProjectForm->isValid()) 
+        {
+            $em->persist($project);
+            $em->flush();
+
+            return $this->redirectToRoute('core_project');
+        }
 
         return $this->render('CoreBundle::edit-project.html.twig', array(
             'editProjectForm' => $editProjectForm->createView()

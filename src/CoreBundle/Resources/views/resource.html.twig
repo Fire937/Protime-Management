@@ -7,26 +7,17 @@
 		<tr> 
 			<th>Nom</th> 
 			<th>Projet affectée</th> 
-			<th>Tâche affectée</th> 
+			<th>Tâches affectée</th> 
 		</tr>
 		
+		{% for resource in resources %}
 		<tr>
-			<td>DW</td> 
-			<td>To jeej</td> 
-			<td>  1 </td>
+			<td>{{ resource.name }}</td>
+			<td>{{ resource.referentProject }}</td>
+			<td>{{ resource.tasks.first }}</td>
 		</tr>
-		
-		<tr>
-			<td>TD</td> 
-			<td>To jeej</td> 
-			<td>  5 </td>
-		</tr>
-		
-		<tr>
-			<td>RR</td> 
-			<td>To jeej</td> 
-			<td>  3 </td>
-		</tr>  
+		{% endfor %}
+
 	</table>
 </div> 
 {% endblock %}

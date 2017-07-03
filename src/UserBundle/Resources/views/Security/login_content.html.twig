@@ -20,6 +20,7 @@
 
 	<div> 
 		<input type="submit" name="valider" value="connexion" />
-		<a href="ah.php"> Mot de passe oublié?</a>
+		<a href="{{ url('fos_user_resetting_request') }}"> Mot de passe oublié?</a>
+		<a href="{{ url('fos_user_registration_register') }}">S'enregistrer</a>
 	</div>
 </form>

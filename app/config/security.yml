@@ -18,7 +18,11 @@ security:
 
         register:
             pattern:      ^/register
-            anonymous: ~
+            anonymous:    ~
+
+        forgot:
+            pattern:      ^/resetting
+            anonymous:   ~
 
         login:
             pattern:      ^/login$

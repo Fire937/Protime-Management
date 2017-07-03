@@ -1,0 +1,10 @@
+{% extends 'CoreBundle::layout.html.twig' %}
+
+{% block content %}
+{{ form_start(editProjectForm) }}
+{{ form_widget(editProjectForm) }}
+<div>
+	<input type="submit"/>
+</div>
+{{ form_end(editProjectForm) }}
+{% endblock %}

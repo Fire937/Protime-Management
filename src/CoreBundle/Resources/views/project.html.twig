@@ -6,46 +6,17 @@
 		
 		<caption> Gestion des Projets </caption>
 		<tr> 
-			<th></th>
 			<th>Nom Projet</th> 
 			<th>Avancement</th> 
 			<th>Ressources affectés</th>    
 		</tr>
-		
-		<tr>
-			<td> <input type="checkbox" name="ch1" value="checked"> </td> 
-			<td>Projet 1</td> 
-			<td>68%</td> 
-			<td> RR </td>
-		</tr>
-		
-		<tr>
-			<td> <input type="checkbox" name="ch2" value="checked"> </td>
-			<td>Projet 2</td> 
-			<td>95%</td> 
-			<td> DW </td>
-		</tr>
-		
-		<tr>
-			<td> <input type="checkbox" name="ch3" value="checked"> </td>
-			<td>Projet 3</td> 
-			<td>37%</td> 
-			<td> TD </td>
-		</tr>
-		
-		<tr>
-			<td> <input type="checkbox" name="ch4" value="checked"> </td>
-			<td>Projet 4</td> 
-			<td>9%</td> 
-			<td> SW </td>
-		</tr>
 
+		{% for project in projects %}
 		<tr>
-			<td> <input type="checkbox" name="ch4" value="checked"> </td>
-			<td>Projet 4</td> 
-			<td>9%</td> 
-			<td> SW </td>
+			<td>project.name</td>
+			<td>project.progress%</td>
 		</tr>
+		{% endfor %}
 		
 	</table>
 </div>
@@ -55,3 +26,4 @@
 	<button id="button-other" class="button">Supprimer une tâche</button>
 	<button id="button-other" class="button">Modifier une tâche</button>
 </div>
+{% endblock %}

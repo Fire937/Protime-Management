@@ -17,6 +17,9 @@ class DefaultController extends Controller
 
     public function projectAction()
     {
+        $createProjectForm = $this->createForm()
+            ->add('')
+
     	return $this->render('CoreBundle::project.html.twig');
     }
 

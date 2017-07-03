@@ -48,13 +48,14 @@ class Resource extends BaseUser
   
     /**
      * Many Resources have Many Tasks.
-     * @ORM\ManyToMany(targetEntity="CoreBundle\Entity\Project", inversedBy="resources")
+     * @ORM\ManyToMany(targetEntity="CoreBundle\Entity\Task", inversedBy="resources")
      * @ORM\JoinTable(name="resources_tasks")
      */
     private $tasks;
 
     public function __construct()
     {
+      $this->tasks = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

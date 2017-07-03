@@ -5,6 +5,8 @@ namespace UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 
+use Doctrine\Common\Collections\Collection;
+
 /**
  * Resource
  *
@@ -46,16 +48,14 @@ class Resource extends BaseUser
   
     /**
      * Many Resources have Many Tasks.
-     * @ORM\ManyToMany(targetEntity="CoreBundle\Entity\Project", inversedBy="resources")
+     * @ORM\ManyToMany(targetEntity="CoreBundle\Entity\Task", inversedBy="resources")
      * @ORM\JoinTable(name="resources_tasks")
      */
     private $tasks;
 
     public function __construct()
     {
-        $this->$referent_projects = new ArrayCollection();
-        $this->$responsible_projects = new ArrayCollection();
-        $this->tasks = new \Doctrine\Common\Collections\ArrayCollection();
+      $this->tasks = new ArrayCollection();
     }
 
     /**
@@ -182,5 +182,39 @@ class Resource extends BaseUser
     public function getResponsibleProjects()
     {
         return $this->responsible_projects;
+    }
+
+    /**
+     * Add task
+     *
+     * @param \CoreBundle\Entity\Project $task
+     *
+     * @return Resource
+     */
+    public function addTask(\CoreBundle\Entity\Project $task)
+    {
+        $this->tasks[] = $task;
+
+        return $this;
+    }
+
+    /**
+     * Remove task
+     *
+     * @param \CoreBundle\Entity\Project $task
+     */
+    public function removeTask(\CoreBundle\Entity\Project $task)
+    {
+        $this->tasks->removeElement($task);
+    }
+
+    /**
+     * Get tasks
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTasks()
+    {
+        return $this->tasks;
     }
 }

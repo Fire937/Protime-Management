@@ -14,7 +14,7 @@ class ProjectRepository extends \Doctrine\ORM\EntityRepository
     {
       return $this->getEntityManager()
             ->createQuery(
-                'SELECT resources.* r FROM resources INNER JOIN resources_tasks rt ON r.id = rt.user_id INNER JOIN tasks t ON rt.task_id = t.id WHERE t.project_id = ?1'
+                'SELECT r FROM resources INNER JOIN resources_tasks rt ON r.id = rt.user_id INNER JOIN tasks t ON rt.task_id = t.id WHERE t.project_id = ?1'
             )->setParameter(1, $this->getId())
             ->getResult();
     }

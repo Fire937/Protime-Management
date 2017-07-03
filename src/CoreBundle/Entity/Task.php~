@@ -63,7 +63,7 @@ class Task
     
     /**
      * Many Tasks have Many Resources.
-     * @ORM\ManyToMany(targetEntity="UserBundle\Entity\Resource", mappedBy="resources")
+     * @ORM\ManyToMany(targetEntity="UserBundle\Entity\Resource", mappedBy="tasks")
      */
     private $resources;
 
@@ -224,5 +224,39 @@ class Task
     public function getProject()
     {
         return $this->project;
+    }
+
+    /**
+     * Add resource
+     *
+     * @param \UserBundle\Entity\Resource $resource
+     *
+     * @return Task
+     */
+    public function addResource(\UserBundle\Entity\Resource $resource)
+    {
+        $this->resources[] = $resource;
+
+        return $this;
+    }
+
+    /**
+     * Remove resource
+     *
+     * @param \UserBundle\Entity\Resource $resource
+     */
+    public function removeResource(\UserBundle\Entity\Resource $resource)
+    {
+        $this->resources->removeElement($resource);
+    }
+
+    /**
+     * Get resources
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getResources()
+    {
+        return $this->resources;
     }
 }

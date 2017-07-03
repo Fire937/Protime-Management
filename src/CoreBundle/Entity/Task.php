@@ -63,7 +63,7 @@ class Task
     
     /**
      * Many Tasks have Many Resources.
-     * @ORM\ManyToMany(targetEntity="UserBundle\Entity\Resource", mappedBy="resources")
+     * @ORM\ManyToMany(targetEntity="UserBundle\Entity\Resource", mappedBy="tasks")
      */
     private $resources;
 

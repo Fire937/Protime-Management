@@ -14,7 +14,7 @@ class ResourceRepository extends \Doctrine\ORM\EntityRepository
     {
       return $this->getEntityManager()
             ->createQuery(
-                'SELECT * FROM CoreBundle:projects p INNER JOIN CoreBundle:tasks t ON p.id = t.project_id INNER JOIN resources_tasks ON t.id = resources_tasks.task_id WHERE tasks_users.resources_id = ?1'
+                'SELECT p FROM CoreBundle:projects p INNER JOIN CoreBundle:tasks t ON p.id = t.project_id INNER JOIN resources_tasks ON t.id = resources_tasks.task_id WHERE tasks_users.resources_id = ?1'
             )->setParameter(1, $this->getId())
             ->getResult();
     }

@@ -38,7 +38,7 @@ class DefaultController extends Controller
             ;
 
         if ($createProjectForm->handleRequest($request)->isSubmitted() 
-            && $createProjectForm->handleRequest($request)->isValid()) 
+            && $createProjectForm->isValid()) 
         {
             $project = $form->getData();
 

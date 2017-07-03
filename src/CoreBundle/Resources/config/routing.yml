@@ -6,6 +6,14 @@ core_project:
     path:     /project
     defaults: { _controller: CoreBundle:Default:project }
 
+core_project_edit:
+    path:     /project/{id}
+    defaults: { _controller: CoreBundle:Default:editProject }
+
+core_project_delete:
+    path:     /project/delete/{id}
+    defaults: { _controller: CoreBundle:Default:deleteProject }
+
 core_resource:
     path:     /resource
     defaults: { _controller: CoreBundle:Default:resource }

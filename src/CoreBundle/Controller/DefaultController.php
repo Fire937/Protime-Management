@@ -4,7 +4,9 @@ namespace CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 
 use CoreBundle\Entity\Project;
 
@@ -21,7 +23,9 @@ class DefaultController extends Controller
 
     public function projectAction(Request $request)
     {
-        $createProjectForm = $this->createForm()
+        $resource = $this->getUser();
+
+        $createProjectForm = $this->createForm(FormType::class)
             ->add('name')
             ->add('referent', EntityType::class, array(
                 'class'         => 'UserBundle:Resource',
@@ -33,11 +37,12 @@ class DefaultController extends Controller
             ->add('resourceAverageNumber')
             ;
 
-        if ($form->handleRequest($request)->isSubmitted() && $form->handleRequest($request)->isValid()) 
+        if ($createProjectForm->handleRequest($request)->isSubmitted() 
+            && $createProjectFrm->handleRequest($request)->isValid()) 
         {
-            $projectData = $form->getData();
+            $project = $form->getData();
 
-            $project = new Project();
+            /*$project = new Project();
             $project
                 ->setName($projectData['name'])
                 ->setReferent($projectData['referent'])
@@ -46,7 +51,8 @@ class DefaultController extends Controller
                 ->setGain($projectData['gain'])
                 ->setResourceAverageNumber($projectData['resourceAverageNumber'])
                 ->setResponsible($this->getUser())
-                ;
+                ;*/
+            $project->setResponsible($resource);
 
             $em = $this->get('doctrine.orm.entity_manager');
             $em->persist($project);
@@ -56,7 +62,8 @@ class DefaultController extends Controller
         }
 
     	return $this->render('CoreBundle::project.html.twig', array(
-            'createProjectForm' => $createProjectForm->createView()
+            'projects'          => $this->get('doctrine.orm.entity_manager')->getRepository('UserBundle:Resource')->findProjects($resource),
+            'createProjectForm' => $createProjectForm->createView(),
             ));
     }
 

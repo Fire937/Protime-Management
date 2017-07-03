@@ -72,7 +72,7 @@ class DefaultController extends Controller
 
         $project = $em->getRepository('CoreBundle:Project')->findOneById($id);
 
-        if ($project && $projet->getReferent() === $this->getUser())
+        if ($project && $project->getReferent() === $this->getUser())
         {
             $em->remove($project);
             $em->flush();

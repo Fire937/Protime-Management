@@ -24,9 +24,14 @@ class ProjectRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('p');
 
         return $qb
-            ->join('p.tasks', 't')
-            ->join('t.resources', 'r')
-            ->where($qb->expr()->eq('r', ':resource'))
+            ->leftJoin('p.tasks', 't')
+            ->leftJoin('t.resources', 'r')
+
+            ->andWhere($qb->expr()->orX(
+            	$qb->expr()->eq('r', ':resource'),
+            	$qb->expr()->eq('p.responsible', ':resource'),
+            	$qb->expr()->eq('p.referent', ':resource')
+            ))
 
             ->setParameter('resource', $resource)
 

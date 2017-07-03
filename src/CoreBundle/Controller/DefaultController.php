@@ -11,7 +11,7 @@ class DefaultController extends Controller
         $user = $this->getUser();
 
         return $this->render('CoreBundle::index.html.twig', array(
-            'projects' => array()//$user->findProjects()
+            'projects' => $user->getProjects(),
             ));
     }
 
@@ -19,6 +19,7 @@ class DefaultController extends Controller
     {
         $createProjectForm = $this->createForm()
             ->add('')
+            ;
 
     	return $this->render('CoreBundle::project.html.twig');
     }

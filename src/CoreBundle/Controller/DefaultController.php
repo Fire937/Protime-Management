@@ -42,7 +42,7 @@ class DefaultController extends Controller
         {
             $project = $form->getData();
 
-            /*$project = new Project();
+            $project = new Project();
             $project
                 ->setName($projectData['name'])
                 ->setReferent($projectData['referent'])
@@ -50,9 +50,8 @@ class DefaultController extends Controller
                 ->setSellCost($projectData['sellCost'])
                 ->setGain($projectData['gain'])
                 ->setResourceAverageNumber($projectData['resourceAverageNumber'])
-                ->setResponsible($this->getUser())
-                ;*/
-            $project->setResponsible($resource);
+                ->setResponsible($resource)
+                ;
 
             $em = $this->get('doctrine.orm.entity_manager');
             $em->persist($project);
@@ -65,6 +64,22 @@ class DefaultController extends Controller
             'projects'          => $this->get('doctrine.orm.entity_manager')->getRepository('UserBundle:Resource')->findProjects($resource),
             'createProjectForm' => $createProjectForm->createView(),
             ));
+    }
+
+    public function deleteProjectAction($id)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        $project = $em->getRepository('CoreBundle:Project')->findById($id);
+
+        if ($project)
+        {
+            $em->remove($project);
+            $em->flush();
+        }
+        // if project doesn't exist, then do nothing and just redirect, we could send 404 error if we were really bothered
+
+        return $this->redirectToRoute('core_project');
     }
 
     public function resourceAction()

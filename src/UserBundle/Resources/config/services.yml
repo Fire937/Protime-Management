@@ -3,3 +3,12 @@ services:
         class:  UserBundle\Security\UserProvider
         arguments: 
             - '@dao.user'
+
+    dao.user:
+        parent: custom_dao
+        public: true
+        class:  UserBundle\DAO\UserDAO
+
+    UserBundle\Controller\SecurityController:
+        autowire: true
+        tags: ['controller.service_arguments']

@@ -15,7 +15,7 @@ class DefaultController extends Controller
     public function indexAction()
     {
         $user = $this->getUser();
-        $projects = $this->get('dao.projects')->findByUser($)
+        $projects = $this->get('dao.projects')->findByUser($user);
 
         return $this->render('CoreBundle::index.html.twig', array(
             'projects' => $projects,
@@ -24,15 +24,14 @@ class DefaultController extends Controller
 
     public function projectAction(Request $request)
     {
-        $resource = $this->getUser();
+        $user = $this->getUser();
+        $projects = $this->get('dao.projects')->findByUser($user);
 
         $project = new Project();
         $createProjectForm = $this->createForm(FormType::class, $project)
             ->add('name')
-            ->add('referent', EntityType::class, array(
-                'class'         => 'UserBundle:Resource',
-                'choice_label'  => 'username',
-                ))
+            // Le chef de projet créé une ressource de type Directeur de Projet qui sera le référent du projet, à la création du projet.
+            ->add('referent', RegistrationType::class)
             ->add('costToDeliver')
             ->add('sellCost')
             ->add('gain')
@@ -42,54 +41,58 @@ class DefaultController extends Controller
         if ($createProjectForm->handleRequest($request)->isSubmitted() 
             && $createProjectForm->isValid()) 
         {
-            $project->setResponsible($resource);
+            $project->setResponsible($user);
 
-            $em = $this->get('doctrine.orm.entity_manager');
-            $em->persist($project);
-            $em->flush();
+            $this->get('dao.project')->save($project);
 
             return $this->redirectToRoute('core_project');
         }
 
     	return $this->render('CoreBundle::project.html.twig', array(
-            'projects'          => $this->get('doctrine.orm.entity_manager')->getRepository('CoreBundle:Project')->findProjects($resource),
+            'projects'          => $projects,
             'createProjectForm' => $createProjectForm->createView(),
             ));
     }
 
     public function deleteProjectAction($id)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $project = $this->get('dao.project')->find($id);
 
-        $project = $em->getRepository('CoreBundle:Project')->findOneById($id);
-
-        if ($project && $project->getReferent() === $this->getUser())
-        {
-            $em->remove($project);
-            $em->flush();
+        if (!$projet) {
+            throw $this->createNotFoundException("Ce projet n'existe pas");
         }
-        // if project doesn't exist or user doesn't have the rights, then do nothing and just redirect, we could send 404 error if we were really bothered
+
+        if ($project->getReferent() !== $this->getUser()) {
+            // L'utilisateur n'a pas les droits sur le projet
+            throw $this->createAccessDeniedException("Vous n'êtes pas le Chef de Projet")
+        }
+
+        $this->get('dao.project')->delete($project);
+        $this->addFlash('success', "Le projet a été supprimé avec succès");
 
         return $this->redirectToRoute('core_project');
     }
 
     public function editProjectAction($id, Request $request)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $project = $this->get('dao.project')->find($id);
 
-        $project = $em->getRepository('CoreBundle:Project')->findOneById($id);
+        if (!$project) {
+            throw $this->createNotFoundException("Ce projet n'existe pas");
+        }
 
         if ($project->getReferent() !== $this->getUser()) 
         {
-            throw $this->createAccessDeniedException("Vous ne pouvez pas modifier les projets dans lesquels vous n'êtes pas le chef de projet");
+            throw $this->createAccessDeniedException("Vous n'êtes pas le Chef de Projet");
         }
 
         // Yes, same form than in projectAction but creating a FormType is a pain
         $editProjectForm = $this->createForm(FormType::class, $project)
             ->add('name')
-            ->add('referent', EntityType::class, array(
-                'class'         => 'UserBundle:Resource',
-                'choice_label'  => 'username',
+            ->add('referent', ChoiceType::class, array(
+                'choices' => array(
+                    // Liste des ressources sur le projet (le directeur de projet en fait partie et est sélectionné par défaut)
+                    )
                 ))
             ->add('costToDeliver')
             ->add('sellCost')
@@ -100,8 +103,8 @@ class DefaultController extends Controller
         if ($editProjectForm->handleRequest($request)->isSubmitted() 
             && $editProjectForm->isValid()) 
         {
-            $em->persist($project);
-            $em->flush();
+            $this->get('dao.project')->save($project);
+            $this->addFlash('success', "Le projet a été modifié avec succès");
 
             return $this->redirectToRoute('core_project');
         }

@@ -2,7 +2,7 @@
 
 {% block content %}
 {{ form_start(form) }}
-    <div>
+    {#<div>
 		<label> 
 			Identifiant : {{ form_widget(form.username) }}
 		</label>
@@ -42,7 +42,8 @@
 	</div>
 
 	{{ form_rest(form) }}
-
+#}
+	{{ form_widget(form) }}
     <div>
         <input type="submit" value="S'enregistrer"/>
     </div>

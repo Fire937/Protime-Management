@@ -2,7 +2,7 @@
 # https://symfony.com/doc/current/security.html
 security:
     encoders:
-        UserBundle\Entity\User: sha512
+        UserBundle\Entity\User: bcrypt
 
     #role_hierarchy:
 

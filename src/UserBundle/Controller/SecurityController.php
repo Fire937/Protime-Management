@@ -15,6 +15,7 @@ class SecurityController extends Controller
 	{
 		// Si l'utilisateur est déjà connecté, on le redirige vers la page d'accueil
 		if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+			$this->addFlash('success', "Connexion réussie");
 			return $this->redirectToRoute('core_homepage');
 		}
 
@@ -27,7 +28,7 @@ class SecurityController extends Controller
 			));
 	}
 
-	public function registerAction(Request $request, UserPasswordEncoderInterface $encoder = null)
+	public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
 	{
 		// Pareil, si l'utilisateur est déjà connecté, il n'a pas besoin de créer un compte, on le redirige
 		if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
@@ -41,14 +42,15 @@ class SecurityController extends Controller
 		if ($registrationForm->handleRequest($request)->isSubmitted() && $registrationForm->isValid()) 
 		{
 			// On inscrit l'utilisateur
-			$salt = rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '='); // Création du sel
-			$user->setSalt($salt);
-			$password = $encoder->encodePassword($user, $registrationForm->getData()['plainPassword']); // On encode le mot de passe (sha512 + salt)
+
+			// On hash le mot de passe (bcrypt)
+			$password = $passwordEncoder->encodePassword($user, $registrationForm->get('plainPassword')->getData()); 
 			$user->setPassword($password);
 
 			$user->setRole('ROLE_CP'); // On lui assigne le rôle Chef de Projet
 
 			$this->get('dao.user')->save($user);
+			$this->addFlash('success', "Inscription réussie");
 
 			return $this->redirectToRoute('user_login'); // L'utilisateur peut à présent se connecter en tant que Chef de Projet.
 		}

@@ -1,4 +1,10 @@
 services:
-    dao.user:
+    dao.project:
         parent: custom_dao
-        class:  UserBundle\DAO\UserDAO
+        public: true
+        class:  CoreBundle\DAO\ProjectDAO
+
+    dao.task:
+        parent: custom_dao
+        public: true
+        class:  CoreBundle\DAO\TaskDAO

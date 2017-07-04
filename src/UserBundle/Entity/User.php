@@ -3,8 +3,9 @@
 namespace UserBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 
-class User implements UserInterface
+class User implements UserInterface, EquatableInterface
 {
 	private $id;
 
@@ -32,11 +33,6 @@ class User implements UserInterface
 	 * @var string
 	 */
 	private $password;
-
-	/**
-	 * @var string
-	 */
-	private $salt;
 
 	/**
 	 * @var string|null We say a user can only have one role, or none
@@ -141,16 +137,9 @@ class User implements UserInterface
 		return $this->password;
 	}
 
-	public function setSalt($salt)
-	{
-		$this->salt = $salt;
-
-		return $this;
-	}
-
 	public function getSalt()
 	{
-		return $this->salt;
+		return null; // bcrypt has built-in salt
 	}
 
 	public function setRole($role)
@@ -168,5 +157,14 @@ class User implements UserInterface
 	public function getRoles()
 	{
 		return array($this->role);
+	}
+
+	public function isEqualTo(UserInterface $user)
+	{
+		if (!$user instanceof User || $user->getId() !== $this->id) {
+			return false;
+		}
+
+		return true;
 	}
 }

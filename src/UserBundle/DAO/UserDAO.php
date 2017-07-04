@@ -3,6 +3,7 @@
 namespace UserBundle\DAO;
 
 use CoreBundle\DAO\DAO;
+use UserBundle\Entity\User;
 
 class UserDAO extends DAO
 {

@@ -27,7 +27,7 @@ class DBAL
 
 	public function __destruct()
 	{
-		mysqli_close($mysqli);
+		mysqli_close($this->mysqli);
 	}
 
 	/**

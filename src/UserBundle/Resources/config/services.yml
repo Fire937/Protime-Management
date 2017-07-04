@@ -1,0 +1,5 @@
+services:
+    user_provider:
+        class:  UserBundle\Security\UserProvider
+        arguments: 
+            - '@dao.user'

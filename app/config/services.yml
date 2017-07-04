@@ -27,10 +27,6 @@ services:
             - '%database_port%'
 
     custom_dao:
-        class:      CoreBundle\DAO\DAO
         abstract:  true
         arguments:
             - '@custom_dbal'
-
-    dao.user:
-        parent: custom_dao

@@ -30,7 +30,7 @@ class UserProvider implements UserProviderInterface
 		return $user;
 	}
 
-	public function refreshUser(User $user)
+	public function refreshUser(UserInterface $user)
 	{
 		if (!$user instanceof User) {
 			throw new UnsupportedUserException(sprintf('Expected an instance of UserBundle\Entity\User, but got "%s".', get_class($user)));

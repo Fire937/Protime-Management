@@ -2,6 +2,8 @@
 
 namespace UserBundle\DAO;
 
+use CoreBundle\DAO\DAO;
+
 class UserDAO extends DAO
 {
 	/**
@@ -29,7 +31,7 @@ class UserDAO extends DAO
 	 */
 	public function save(User $user)
 	{
-		
+
 	}
 
 	protected function buildObject($row)

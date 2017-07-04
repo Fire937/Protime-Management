@@ -9,7 +9,7 @@ security:
 
     providers:
         main:
-            id: UserBundle\Security\UserProvider
+            id: user_provider
 
 #     Chef de projet, Directeur de projet, Développeur  CP DP DEV
 

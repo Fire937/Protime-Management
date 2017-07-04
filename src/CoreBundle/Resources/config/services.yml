@@ -1,4 +1,4 @@
 services:
-#    core.example:
-#        class: CoreBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+    dao.user:
+        parent: custom_dao
+        class:  UserBundle\DAO\UserDAO

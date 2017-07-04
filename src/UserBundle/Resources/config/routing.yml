@@ -9,7 +9,7 @@ user_login_check:
 user_register:
     path:   /register
     defaults:
-        _controller: UserBundle:Registration:register
+        _controller: UserBundle:Security:register
 
 user_logout:
     path:   /logout

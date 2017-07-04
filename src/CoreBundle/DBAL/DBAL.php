@@ -1,6 +1,6 @@
 <?php
 
-namespace CoreBundle\DAO;
+namespace CoreBundle\DBAL;
 
 /**
  * DataBase Access Layer, donne un accès facilité à la base de donné en appliquant en englobant les fonctionnalités mysqli dans un objet. Cependant, celui-ci reste très simple, ne se contentant que d'ouvrir la connexion au démarrage et de la fermer.
@@ -13,11 +13,11 @@ class DBAL
 	 */
 	private $mysqli;
 
-	public function __construct($host, $username, $password, $dbname, $port)
+	public function __construct($host, $username, $password, $dbname, $port = null)
 	{
-		$port = $host? $host:ini_get("mysqli.default_port");
+		$port = $port? $port:ini_get("mysqli.default_port");
 
-		$this->mysqli = mysqli_connect($host, $username, $password, $dbanme, $port);
+		$this->mysqli = mysqli_connect($host, $username, $password, $dbname, $port);
 
 		if ($this->mysqli->connect_errno){
 			// La connexion à échouée

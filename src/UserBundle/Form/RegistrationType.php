@@ -30,7 +30,8 @@ class RegistrationType extends AbstractType
                 'type'              => PasswordType::class,
                 'first_options'     => array('label' => "Mot de passe"),
                 'second_options'    => array('label' => "Confirmation du mot de passe"),
-                'invalid_message'   => "Les deux champs mot de passe doivent être identiques"
+                'invalid_message'   => "Les deux champs mot de passe doivent être identiques",
+                'mapped'            => false
                 ))
             ;
     }

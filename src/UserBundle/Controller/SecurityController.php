@@ -4,6 +4,7 @@ namespace UserBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 use UserBundle\Form\RegistrationType;
 use UserBundle\Entity\User;
@@ -26,7 +27,7 @@ class SecurityController extends Controller
 			));
 	}
 
-	public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+	public function registerAction(Request $request, UserPasswordEncoderInterface $encoder = null)
 	{
 		// Pareil, si l'utilisateur est déjà connecté, il n'a pas besoin de créer un compte, on le redirige
 		if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
@@ -42,7 +43,7 @@ class SecurityController extends Controller
 			// On inscrit l'utilisateur
 			$salt = rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '='); // Création du sel
 			$user->setSalt($salt);
-			$password = $passwordEncoder->encodePassword($user, $registrationForm->getData()['plainPassword']); // On encode le mot de passe (sha512 + salt)
+			$password = $encoder->encodePassword($user, $registrationForm->getData()['plainPassword']); // On encode le mot de passe (sha512 + salt)
 			$user->setPassword($password);
 
 			$user->setRoles(array('ROLE_CP')); // On lui assigne le rôle Chef de Projet
@@ -53,7 +54,7 @@ class SecurityController extends Controller
 		}
 
 		return $this->render('UserBundle:Registration:register.html.twig', array(
-			'form' => $registrationForm,
+			'form' => $registrationForm->createView(),
 			));
 	}
 }

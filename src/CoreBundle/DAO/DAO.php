@@ -12,7 +12,7 @@ abstract class DAO
 	 */
 	private $db;
 
-	public function __construct(CoreBundle\DBAL\DBAL $db) {
+	public function __construct(\CoreBundle\DBAL\DBAL $db) {
 		$this->db = $db;
 	}
 

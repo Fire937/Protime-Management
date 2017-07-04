@@ -29,12 +29,6 @@ class Task
     private $name;
 
     /**
-     * @var int
-     * @ORM\Column(name="project_id", type="integer")
-     */
-    private $projectId;
-
-    /**
      * @var float
      *
      * @ORM\Column(name="initial_workload", type="float")

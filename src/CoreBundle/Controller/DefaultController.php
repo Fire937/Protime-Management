@@ -14,10 +14,11 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        $resource = $this->getUser();
+        $user = $this->getUser();
+        $projects = $this->get('dao.projects')->findByUser($)
 
         return $this->render('CoreBundle::index.html.twig', array(
-            'projects' => $this->get('doctrine.orm.entity_manager')->getRepository('CoreBundle:Project')->findProjects($resource),
+            'projects' => $projects,
             ));
     }
 

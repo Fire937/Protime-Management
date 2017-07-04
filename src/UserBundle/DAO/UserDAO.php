@@ -13,7 +13,7 @@ class UserDAO extends DAO
 	 */
 	public function find($id)
 	{
-
+		
 	}
 
 	/**

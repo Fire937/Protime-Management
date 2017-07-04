@@ -41,7 +41,7 @@ class User implements UserInterface
 	/**
 	 * @var string|null We say a user can only have one role, or none
 	 */
-	private $roles;
+	private $role;
 
 	public function eraseCredentials()
 	{
@@ -153,15 +153,20 @@ class User implements UserInterface
 		return $this->salt;
 	}
 
-	public function setRoles(array $roles)
+	public function setRole($role)
 	{
-		$this->roles = $roles;
+		$this->role = $role;
 
 		return $this;
 	}
 
+	public function getRole()
+	{
+		return $this->role;
+	}
+
 	public function getRoles()
 	{
-		return $this->roles;
+		return array($this->role);
 	}
 }

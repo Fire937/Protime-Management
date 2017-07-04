@@ -29,13 +29,13 @@ class Project
     private $name;
   
     /**
-     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\Resource", inversedBy="referent_projects")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="referent_projects")
      * @ORM\JoinColumn(name="referent_id", referencedColumnName="id")
      */
     private $referent;
   
     /**
-     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\Resource", inversedBy="responsible_projects")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="responsible_projects")
      * @ORM\JoinColumn(name="responsible_id", referencedColumnName="id")
      */
     private $responsible;
@@ -76,9 +76,16 @@ class Project
     private $resourceAverageNumber;
   
     /**
+     * @var array The tasks attached to the project, in an array.
+     *
      * @ORM\OneToMany(targetEntity="Task", mappedBy="project")
      */
     private $tasks;
+
+    /**
+     * @var array An array containing users, the resources attached to the project
+     */
+    private $resources;
 
     public function __construct()
     {
@@ -271,7 +278,7 @@ class Project
      *
      * @return Project
      */
-    public function setResourceAverageNumber($resourceAverageNumber)
+    public function setUserAverageNumber($resourceAverageNumber)
     {
         $this->resourceAverageNumber = $resourceAverageNumber;
 
@@ -283,7 +290,7 @@ class Project
      *
      * @return int
      */
-    public function getResourceAverageNumber()
+    public function getUserAverageNumber()
     {
         return $this->resourceAverageNumber;
     }
@@ -325,11 +332,11 @@ class Project
     /**
      * Set referent
      *
-     * @param \UserBundle\Entity\Resource $referent
+     * @param \UserBundle\Entity\User $referent
      *
      * @return Project
      */
-    public function setReferent(\UserBundle\Entity\Resource $referent = null)
+    public function setReferent(\UserBundle\Entity\User $referent = null)
     {
         $this->referent = $referent;
 
@@ -339,7 +346,7 @@ class Project
     /**
      * Get referent
      *
-     * @return \UserBundle\Entity\Resource
+     * @return \UserBundle\Entity\User
      */
     public function getReferent()
     {
@@ -349,11 +356,11 @@ class Project
     /**
      * Set responsible
      *
-     * @param \UserBundle\Entity\Resource $responsible
+     * @param \UserBundle\Entity\User $responsible
      *
      * @return Project
      */
-    public function setResponsible(\UserBundle\Entity\Resource $responsible = null)
+    public function setResponsible(\UserBundle\Entity\User $responsible = null)
     {
         $this->responsible = $responsible;
 
@@ -363,7 +370,7 @@ class Project
     /**
      * Get responsible
      *
-     * @return \UserBundle\Entity\Resource
+     * @return \UserBundle\Entity\User
      */
     public function getResponsible()
     {

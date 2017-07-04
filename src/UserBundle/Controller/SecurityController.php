@@ -46,7 +46,7 @@ class SecurityController extends Controller
 			$password = $encoder->encodePassword($user, $registrationForm->getData()['plainPassword']); // On encode le mot de passe (sha512 + salt)
 			$user->setPassword($password);
 
-			$user->setRoles(array('ROLE_CP')); // On lui assigne le rôle Chef de Projet
+			$user->setRole('ROLE_CP'); // On lui assigne le rôle Chef de Projet
 
 			$this->get('dao.user')->save($user);
 

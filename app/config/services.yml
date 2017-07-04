@@ -17,11 +17,20 @@ services:
     # makes classes in src/AppBundle available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
 
-    mysqli:
-        class: \mysqli
+    custom_dbal:
+        class: CoreBundle\DBAL\DBAL
         arguments:
             - '%database_host%'
-            - '%database_name%'
+            - '%database_user%'
             - '%database_password%'
             - '%database_name%'
             - '%database_port%'
+
+    custom_dao:
+        class:      CoreBundle\DAO\DAO
+        abstract:  true
+        arguments:
+            - '@custom_dbal'
+
+    dao.user:
+        parent: custom_dao

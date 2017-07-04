@@ -1,6 +1,6 @@
 {% extends 'CoreBundle::layout.html.twig' %}
 
-{{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'fos_user_registration_register'}}) }}
+{{ form_start(form) }}
     <div>
 		<label> 
 			Identifiant : {{ form_widget(form.username) }}

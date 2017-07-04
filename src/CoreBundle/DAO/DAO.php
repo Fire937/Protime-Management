@@ -10,22 +10,24 @@ abstract class DAO
 	 *
 	 * @var \mysqli Connexion mysqli
 	 */
-	private $mysqli;
+	private $db;
 
-	public function __construct(\mysqli $mysqli) {
-		$this->mysqli = $mysqli;
+	public function __construct(CoreBundle\DBAL\DBAL $db) {
+		$this->db = $db;
 	}
 
 	/**
 	 * Grants access to the database connection object
 	 */
 	protected function getDb() {
-		return $this->mysqli;
+		return $this->db;
 	}
 
 	/**
 	 * Builds an object from a DB row.
 	 * Must be overridden by child classes.
+	 *
+	 * @param array
 	 */
 	protected abstract function buildObject($row);
 }

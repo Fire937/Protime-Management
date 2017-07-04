@@ -8,41 +8,43 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 
 use UserBundle\Entity\User;
+use UserBundle\DAO\UserDAO;
 
 class UserProvider implements UserProviderInterface
 {
-	public function __construct()
+	private $userDAO;
+
+	public function __construct(UserDAO $userDAO)
+	{
+		$this->userDAO = $userDAO;
+	}
 
 	public function loadUserByUsername($username)
 	{
-		$userData = 
+		$user = $this->userDAO->findByUsername($username);
 
-		if ($userData) {
-			$password = '...';
-
-			// ...
-
-			return new WebserviceUser($username, $password, $salt, $roles);
+		if (!$user) {
+			throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
 		}
 
-		throw new UsernameNotFoundException(
-			sprintf('Username "%s" does not exist.', $username)
-			);
+		return $user;
 	}
 
-	public function refreshUser(UserInterface $user)
+	public function refreshUser(User $user)
 	{
-		if (!$user instanceof WebserviceUser) {
-			throw new UnsupportedUserException(
-				sprintf('Instances of "%s" are not supported.', get_class($user))
-				);
+		if (!$user instanceof User) {
+			throw new UnsupportedUserException(sprintf('Expected an instance of UserBundle\Entity\User, but got "%s".', get_class($user)));
 		}
 
-		return $this->loadUserByUsername($user->getUsername());
+		if (!($reloadedUser = $this->userDAO->find($user->getId()))) {
+			throw new UsernameNotFoundException(sprintf('User with ID "%s" could not be reloaded.', $user->getId()));
+		}
+
+		return $reloadedUser;
 	}
 
 	public function supportsClass($class)
 	{
-		return WebserviceUser::class === $class;
+		return User::class === $class;
 	}
 }

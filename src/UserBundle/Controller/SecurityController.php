@@ -26,7 +26,7 @@ class SecurityController extends Controller
 			));
 	}
 
-	public function registerAction(Request $request)
+	public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
 	{
 		// Pareil, si l'utilisateur est déjà connecté, il n'a pas besoin de créer un compte, on le redirige
 		if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
@@ -39,11 +39,21 @@ class SecurityController extends Controller
 
 		if ($registrationForm->handleRequest($request)->isSubmitted() && $registrationForm->isValid()) 
 		{
-			// On inscrit l'utilisateur, on lui assigne le role de Chef de Projet
-			$user->setRole('ROLE_CP');
+			// On inscrit l'utilisateur
+			$salt = rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '='); // Création du sel
+			$user->setSalt($salt);
+			$password = $passwordEncoder->encodePassword($user, $registrationForm->getData()['plainPassword']); // On encode le mot de passe (sha512 + salt)
+			$user->setPassword($password);
 
-			
+			$user->setRoles(array('ROLE_CP')); // On lui assigne le rôle Chef de Projet
+
+			$this->get('dao.user')->save($user);
+
+			return $this->redirectToRoute('user_login'); // L'utilisateur peut à présent se connecter en tant que Chef de Projet.
 		}
 
+		return $this->render('UserBundle:Registration:register.html.twig', array(
+			'form' => $registrationForm,
+			));
 	}
 }

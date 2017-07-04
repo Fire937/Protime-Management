@@ -13,8 +13,8 @@
 		{% for resource in resources %}
 		<tr>
 			<td>{{ resource.name }}</td>
-			<td>{{ resource.referentProject }}</td>
-			<td>{{ resource.tasks.first }}</td>
+			<td>{{ resource.project }}</td>
+			<td>{{ resource.tasks }}</td>
 		</tr>
 		{% endfor %}
 

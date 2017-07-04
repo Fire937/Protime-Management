@@ -12,117 +12,131 @@ use CoreBundle\Entity\Project;
 
 class DefaultController extends Controller
 {
-    public function indexAction()
-    {
-        $user = $this->getUser();
-        $projects = $this->get('dao.projects')->findByUser($user);
+	public function indexAction()
+	{
+		$user = $this->getUser();
+		$projects = $this->get('dao.projects')->findByUser($user);
 
-        return $this->render('CoreBundle::index.html.twig', array(
-            'projects' => $projects,
-            ));
-    }
+		return $this->render('CoreBundle::index.html.twig', array(
+			'projects' => $projects,
+			));
+	}
 
-    public function projectAction(Request $request)
-    {
-        $user = $this->getUser();
-        $projects = $this->get('dao.projects')->findByUser($user);
+	public function projectAction(Request $request)
+	{
+		$user = $this->getUser();
+		$projects = $this->get('dao.projects')->findByUser($user);
 
-        $project = new Project();
-        $createProjectForm = $this->createForm(FormType::class, $project)
-            ->add('name')
-            // Le chef de projet créé une ressource de type Directeur de Projet qui sera le référent du projet, à la création du projet.
-            ->add('referent', RegistrationType::class)
-            ->add('costToDeliver')
-            ->add('sellCost')
-            ->add('gain')
-            ->add('resourceAverageNumber')
-            ;
+		// On affiche le formulaire de création de projet seulement si l'utilisateur a le rôle chef de projet
+		if ($this->isGranted('ROLE_CP'))
+		{
+			$project = new Project();
+			$createProjectForm = $this->createForm(FormType::class, $project)
+				->add('name')
+				->add('responsible', ChoiceType::class, array(
+					'choices' => array(
+						// Toutes les ressources de type Directeur de Projet, le chef de projet peut les y assigner
+						)
+					))
+				->add('costToDeliver')
+				->add('sellCost')
+				->add('gain')
+				->add('resourceAverageNumber')
+				;
 
-        if ($createProjectForm->handleRequest($request)->isSubmitted() 
-            && $createProjectForm->isValid()) 
-        {
-            $project->setResponsible($user);
+			if ($createProjectForm->handleRequest($request)->isSubmitted() 
+				&& $createProjectForm->isValid()) 
+			{
+				$project->setReferent($user);
 
-            $this->get('dao.project')->save($project);
+				$this->get('dao.project')->save($project);
 
-            return $this->redirectToRoute('core_project');
-        }
+				return $this->redirectToRoute('core_project');
+			}
 
-    	return $this->render('CoreBundle::project.html.twig', array(
-            'projects'          => $projects,
-            'createProjectForm' => $createProjectForm->createView(),
-            ));
-    }
+			return $this->render('CoreBundle::project.html.twig', array(
+				'projects'          => $projects,
+				'createProjectForm' => $createProjectForm->createView(),
+			));
+		}
 
-    public function deleteProjectAction($id)
-    {
-        $project = $this->get('dao.project')->find($id);
+		return $this->render('CoreBundle::project.html.twig', array(
+			'projects'			
+			))
+	}
 
-        if (!$projet) {
-            throw $this->createNotFoundException("Ce projet n'existe pas");
-        }
+	public function deleteProjectAction($id)
+	{
+		$project = $this->get('dao.project')->find($id);
 
-        if ($project->getReferent() !== $this->getUser()) {
-            // L'utilisateur n'a pas les droits sur le projet
-            throw $this->createAccessDeniedException("Vous n'êtes pas le Chef de Projet")
-        }
+		if (!$projet) {
+			throw $this->createNotFoundException("Ce projet n'existe pas");
+		}
 
-        $this->get('dao.project')->delete($project);
-        $this->addFlash('success', "Le projet a été supprimé avec succès");
+		if ($project->getReferent() !== $this->getUser()) {
+			// L'utilisateur n'a pas les droits sur le projet
+			throw $this->createAccessDeniedException("Vous n'êtes pas le Chef de Projet")
+		}
 
-        return $this->redirectToRoute('core_project');
-    }
+		$this->get('dao.project')->delete($project);
+		$this->addFlash('success', "Le projet a été supprimé avec succès");
 
-    public function editProjectAction($id, Request $request)
-    {
-        $project = $this->get('dao.project')->find($id);
+		return $this->redirectToRoute('core_project');
+	}
 
-        if (!$project) {
-            throw $this->createNotFoundException("Ce projet n'existe pas");
-        }
+	public function editProjectAction($id, Request $request)
+	{
+		$project = $this->get('dao.project')->find($id);
 
-        if ($project->getReferent() !== $this->getUser()) 
-        {
-            throw $this->createAccessDeniedException("Vous n'êtes pas le Chef de Projet");
-        }
+		if (!$project) {
+			throw $this->createNotFoundException("Ce projet n'existe pas");
+		}
 
-        // Yes, same form than in projectAction but creating a FormType is a pain
-        $editProjectForm = $this->createForm(FormType::class, $project)
-            ->add('name')
-            ->add('referent', ChoiceType::class, array(
-                'choices' => array(
-                    // Liste des ressources sur le projet (le directeur de projet en fait partie et est sélectionné par défaut)
-                    )
-                ))
-            ->add('costToDeliver')
-            ->add('sellCost')
-            ->add('gain')
-            ->add('resourceAverageNumber')
-            ;
+		if ($project->getReferent() !== $this->getUser()) 
+		{
+			throw $this->createAccessDeniedException("Vous n'êtes pas le Chef de Projet");
+		}
 
-        if ($editProjectForm->handleRequest($request)->isSubmitted() 
-            && $editProjectForm->isValid()) 
-        {
-            $this->get('dao.project')->save($project);
-            $this->addFlash('success', "Le projet a été modifié avec succès");
+		// Yes, same form than in projectAction but creating a FormType is a pain
+		$editProjectForm = $this->createForm(FormType::class, $project)
+			->add('name')
+			->add('responsible', ChoiceType::class, array(
+				'choices' => array(
+					// Liste des ressources de type Directeur de Projet
+					)
+				))
+			->add('costToDeliver')
+			->add('sellCost')
+			->add('gain')
+			->add('resourceAverageNumber')
+			;
 
-            return $this->redirectToRoute('core_project');
-        }
+		if ($editProjectForm->handleRequest($request)->isSubmitted() 
+			&& $editProjectForm->isValid()) 
+		{
+			$this->get('dao.project')->save($project);
+			$this->addFlash('success', "Le projet a été modifié avec succès");
 
-        return $this->render('CoreBundle::edit-project.html.twig', array(
-            'editProjectForm' => $editProjectForm->createView()
-            ));
-    }
+			return $this->redirectToRoute('core_project');
+		}
 
-    public function resourceAction()
-    {
-    	return $this->render('CoreBundle::resource.html.twig', array(
-            
-            ));
-    }
+		return $this->render('CoreBundle::edit-project.html.twig', array(
+			'editProjectForm' => $editProjectForm->createView()
+			));
+	}
 
-    public function taskAction()
-    {
-    	return $this->render('CoreBundle::task.html.twig');
-    }
+	public function resourceAction()
+	{
+		// Les chefs de projets ne font pas partie de la liste des resources, les chefs de projets ne peuvent pas se gérer entre eux.
+		$resources = $this->get('user.dao')->findResources();
+
+		return $this->render('CoreBundle::resource.html.twig', array(
+			'resources' => $resources,
+			));
+	}
+
+	public function taskAction()
+	{
+		return $this->render('CoreBundle::task.html.twig');
+	}
 }

@@ -28,6 +28,16 @@ class UserDAO extends DAO
 	}
 
 	/**
+	 * Returns all user with ROLE_DP or ROLE_DEV
+	 *
+	 * @return array
+	 */
+	public function findResources()
+	{
+
+	}
+
+	/**
 	 * Saves the user in database, update if already exists, create if doesn't exist
 	 */
 	public function save(User $user)

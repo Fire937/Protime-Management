@@ -2,19 +2,29 @@
 
 {% block content %}
 <div>
+	<p><a href="{{ url('user_register') }}">Créer une ressource</a></p>
+
 	<table>
 		<caption> Gestion des ressources </caption>
 		<tr> 
-			<th>Nom</th> 
+			<th>Nom d'utilisateur</th> 
 			<th>Projet affectée</th> 
 			<th>Tâches affectée</th> 
+			{% if is_granted('ROLE_CP') %}<th>Action</th>{% endif %}
 		</tr>
 		
 		{% for resource in resources %}
 		<tr>
-			<td>{{ resource.name }}</td>
+			<td>
+				{% if is_granted('ROLE_CP') %}<a href="{{ url('user_edit') }}">{% endif %}
+					{{ resource.name }}
+				{% if is_granted('ROLE_CP') %}</a>{% endif %}
+			</td>
 			<td>{{ resource.project }}</td>
 			<td>{{ resource.tasks }}</td>
+			{% if is_granted('ROLE_CP') %}
+			<td><a href="{{ url('user_delete', {'id': resource.id }) }}">Supprimer</a></td>
+			{% endif %}
 		</tr>
 		{% endfor %}
 

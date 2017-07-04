@@ -13,3 +13,13 @@ user_register:
 
 user_logout:
     path:   /logout
+
+user_delete:
+    path:   /user/delete
+    defaults:
+        _controller: UserBundle:Security:delete
+
+user_edit:
+    path:   /user/{id}
+    defaults:
+        _controller: UserBundle:Security:edit

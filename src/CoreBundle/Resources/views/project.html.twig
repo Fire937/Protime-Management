@@ -14,12 +14,16 @@
 			<th>Avancement</th>
 			<th>Gain</th>
 			<th>Nombre de resources moyennes</th>
-			<th>Action</th>
+			{% if is_granted('ROLE_CP') %}<th>Action</th>{% endif %}
 		</tr>
 
 		{% for project in projects %}
 		<tr>
-			<td><a href="{{ url('core_project_edit', { id: project.id }) }}">{{ project.name }}</a></td>
+			<td>
+				{% if is_granted('ROLE_CP') %}<a href="{{ url('core_project_edit', { id: project.id }) }}">{% endif %}
+					{{ project.name }}
+				{% if is_granted('ROLE_CP') %}</a>{% endif %}
+			</td>
 			<td>{{ project.referent.username }}</td>
 			<td>{{ project.responsible.username }}</td>
 			<td>{{ project.costToDeliver }}</td>
@@ -27,17 +31,21 @@
 			<td>{{ project.progress }}%</td>
 			<td>{{ project.gain }}</td>
 			<td>{{ project.resourceAverageNumber }}</td>
+			{% if is_granted('ROLE_CP') %}
 			<td><a href="{{ url('core_project_delete', { id: project.id }) }}">Supprimer</a></td>
+			{% endif %}
 		</tr>
 		{% endfor %}
 		
 	</table>
 </div>
 
+{% if is_granted('ROLE_CP') %}
 {{ form_start(createProjectForm) }}
 {{ form_widget(createProjectForm) }}
 <div>
 	<input type="submit"/>
 </div>
 {{ form_end(createProjectForm) }}
+{% endif %}
 {% endblock %}

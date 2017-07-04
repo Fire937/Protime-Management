@@ -28,7 +28,7 @@ class DefaultController extends Controller
 		$projects = $this->get('dao.projects')->findByUser($user);
 
 		// On affiche le formulaire de création de projet seulement si l'utilisateur a le rôle chef de projet
-		if ($this->isGranted('ROLE_CP'))
+		if ($this->get('security.authorization_checker')->isGranted('ROLE_CP'))
 		{
 			$project = new Project();
 			$createProjectForm = $this->createForm(FormType::class, $project)

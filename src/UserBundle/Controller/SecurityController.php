@@ -28,35 +28,89 @@ class SecurityController extends Controller
 			));
 	}
 
+	/**
+	 * Les utilisateurs ne peuvent pas s'enregistrer par eux même, un Chef de Projet doit le faire à leur place
+	 */
 	public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
 	{
 		// Pareil, si l'utilisateur est déjà connecté, il n'a pas besoin de créer un compte, on le redirige
-		if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-			return $this->redirectToRoute('core_homepage');
+		if (!$this->get('security.authorization_checker')->isGranted('ROLE_CP')) {
+			return $this->createAccessDeniedException("Vous n'êtes pas un Chef de Projet");
 		}
 
-		// Sinon on lance le processus d'inscription
+		// Sinon on lance le processus de création d'utilisateur
 		$user = new User();
 		$registrationForm = $this->createForm(RegistrationType::class, $user);
 
 		if ($registrationForm->handleRequest($request)->isSubmitted() && $registrationForm->isValid()) 
 		{
-			// On inscrit l'utilisateur
-
 			// On hash le mot de passe (bcrypt)
 			$password = $passwordEncoder->encodePassword($user, $registrationForm->get('plainPassword')->getData()); 
 			$user->setPassword($password);
 
-			$user->setRole('ROLE_CP'); // On lui assigne le rôle Chef de Projet
-
+			// On l'insert dans la base de donnée
 			$this->get('dao.user')->save($user);
-			$this->addFlash('success', "Inscription réussie");
+			$this->addFlash('success', "La ressource à été créée avec succès");
 
-			return $this->redirectToRoute('user_login'); // L'utilisateur peut à présent se connecter en tant que Chef de Projet.
+			return $this->redirectToRoute('user_register');
 		}
 
 		return $this->render('UserBundle:Registration:register.html.twig', array(
 			'form' => $registrationForm->createView(),
 			));
+	}
+
+	public function deleteAction($id)
+	{
+		// Seul les chefs de projet peuvent supprimer des ressources
+		if (!$this->get('security.authorization_checker')->isGranted('ROLE_CP')) {
+			throw $this->createAccessDeniedException("Vous n'êtes pas un Chef de Projet");
+		}
+
+		$resource = $this->get('dao.user')->find($id);
+
+		if (!$resource) {
+			throw $this->createNotFoundException("Cette resource n'existe pas");
+		}
+
+		if ($resource->getRole() === 'ROLE_CP') {
+			throw $this->createAccessDeniedException("Vous ne pouvez pas supprimer un Chef de Projet");
+		}
+
+		$this->get('dao.user')->delete($resource);
+		$this->addFlash('success', "La ressource vient d'être supprimée");
+
+		return $this->redirectToRoute('core_resource');
+	}
+
+	public function editAction($id)
+	{
+		if (!$this->get('security.authorization_checker')->isGranted('ROLE_CP')) {
+			throw $this->createAccessDeniedException("Vous n'êtes pas un Chef de Projet");
+		}
+
+		$resource = $this->get('dao.user')->find($id);
+
+		if (!$resource) {
+			throw $this->createNotFoundException("Cette ressource n'existe pas");
+		}
+
+		if ($resource->getRole() === 'ROLE_CP') {
+			throw $this->createAccessDeniedException("Vous ne pouvez pas modifier un Chef de Projet");
+		}
+
+		$editForm = $this->createForm(EditType::class, $resource);
+		if ($editForm->handleRequest($request)->isSubmitted()
+			&& $editForm->isValid()) 
+		{
+			$this->get('dao.user')->save($resource); // On enregistre la resource modifiée dans la base de donnée
+			$this->addFlash('success', "La ressource a été créée avec succès");
+
+			return $this->redirectToRoute('core_resource');
+		}
+
+		return $this->render('UserBundle::edit-resource.html.twig', array(
+			'editForm' => $form,
+			))
 	}
 }

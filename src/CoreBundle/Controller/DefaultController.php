@@ -15,7 +15,7 @@ class DefaultController extends Controller
 	public function indexAction()
 	{
 		$user = $this->getUser();
-		$projects = $this->get('dao.projects')->findByUser($user);
+		$projects = $this->get('dao.project')->findByUser($user);
 
 		return $this->render('CoreBundle::index.html.twig', array(
 			'projects' => $projects,
@@ -25,7 +25,7 @@ class DefaultController extends Controller
 	public function projectAction(Request $request)
 	{
 		$user = $this->getUser();
-		$projects = $this->get('dao.projects')->findByUser($user);
+		$projects = $this->get('dao.project')->findByUser($user);
 
 		// On affiche le formulaire de création de projet seulement si l'utilisateur a le rôle chef de projet
 		if ($this->get('security.authorization_checker')->isGranted('ROLE_CP'))
@@ -62,7 +62,7 @@ class DefaultController extends Controller
 
 		return $this->render('CoreBundle::project.html.twig', array(
 			'projects'			
-			))
+			));
 	}
 
 	public function deleteProjectAction($id)
@@ -75,7 +75,7 @@ class DefaultController extends Controller
 
 		if ($project->getReferent() !== $this->getUser()) {
 			// L'utilisateur n'a pas les droits sur le projet
-			throw $this->createAccessDeniedException("Vous n'êtes pas le Chef de Projet")
+			throw $this->createAccessDeniedException("Vous n'êtes pas le Chef de Projet");
 		}
 
 		$this->get('dao.project')->delete($project);
@@ -128,15 +128,27 @@ class DefaultController extends Controller
 	public function resourceAction()
 	{
 		// Les chefs de projets ne font pas partie de la liste des resources, les chefs de projets ne peuvent pas se gérer entre eux.
-		$resources = $this->get('user.dao')->findResources();
+		$resources = $this->get('dao.user')->findResources();
 
 		return $this->render('CoreBundle::resource.html.twig', array(
 			'resources' => $resources,
 			));
 	}
 
-	public function taskAction()
+	public function taskAction($id)
 	{
-		return $this->render('CoreBundle::task.html.twig');
+		// La tâche parente dans la hiérarchie
+		$task = $this->get('dao.task')->find($id);
+
+		if (!$task) {
+			$this->createNotFoundException("Cette tâche n'existe pas");
+		}
+
+		// Les tâches filles
+		$tasks = $this->get('dao.task')->findTasks($task);
+
+		return $this->render('CoreBundle::task.html.twig', array(
+			'tasks' => $tasks
+			));
 	}
 }

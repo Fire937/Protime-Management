@@ -35,7 +35,7 @@ class SecurityController extends Controller
 	{
 		// Pareil, si l'utilisateur est déjà connecté, il n'a pas besoin de créer un compte, on le redirige
 		if (!$this->get('security.authorization_checker')->isGranted('ROLE_CP')) {
-			return $this->createAccessDeniedException("Vous n'êtes pas un Chef de Projet");
+			throw $this->createAccessDeniedException("Vous n'êtes pas un Chef de Projet");
 		}
 
 		// Sinon on lance le processus de création d'utilisateur
@@ -111,6 +111,6 @@ class SecurityController extends Controller
 
 		return $this->render('UserBundle::edit-resource.html.twig', array(
 			'editForm' => $form,
-			))
+			));
 	}
 }

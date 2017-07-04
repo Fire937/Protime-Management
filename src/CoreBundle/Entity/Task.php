@@ -61,8 +61,16 @@ class Task
      */
     private $resources;
 
+    private $estimatedWorkload;
+
+    private $gain;
+    
+    private $progress;
+
     public function __construct() {
-        $this->resources = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->estimatedWorkload = 0;
+        $this->gain = 0;
+        $this->progress = 0;
     }
 
 

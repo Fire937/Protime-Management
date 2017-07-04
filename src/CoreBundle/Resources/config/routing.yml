@@ -19,5 +19,7 @@ core_resource:
     defaults: { _controller: CoreBundle:Default:resource }
 
 core_task:
-    path:     /task
-    defaults: { _controller: CoreBundle:Default:task }
+    path:     /task/{id}
+    defaults: 
+        _controller:    CoreBundle:Default:task
+        id:             null

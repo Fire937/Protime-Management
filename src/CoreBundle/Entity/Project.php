@@ -2,83 +2,58 @@
 
 namespace CoreBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Project
- *
- * @ORM\Table(name="project")
- * @ORM\Entity(repositoryClass="CoreBundle\Repository\ProjectRepository")
  */
 class Project
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
   
     /**
-     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="referent_projects")
-     * @ORM\JoinColumn(name="referent_id", referencedColumnName="id")
+     * @var \UserBundle\Entity\User Un utilisateur de type ROLE_CP
      */
     private $referent;
   
     /**
-     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="responsible_projects")
-     * @ORM\JoinColumn(name="responsible_id", referencedColumnName="id")
+     * @var \UserBundle\Entity\User Un utilisateur de type ROLE_DP (sauf exception, ie: changement de rôle)
      */
     private $responsible;
 
     /**
      * @var float
-     *
-     * @ORM\Column(name="cost_to_deliver", type="float")
      */
     private $costToDeliver;
 
     /**
      * @var float
-     *
-     * @ORM\Column(name="sell_cost", type="float")
      */
     private $sellCost;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="gain", type="float", nullable=true)
      */
     private $gain;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="progress", type="integer")
      */
     private $progress;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="resource_average_number", type="integer")
      */
     private $resourceAverageNumber;
   
     /**
      * @var array The tasks attached to the project, in an array.
-     *
-     * @ORM\OneToMany(targetEntity="Task", mappedBy="project")
      */
     private $tasks;
 
@@ -295,38 +270,33 @@ class Project
         return $this->resourceAverageNumber;
     }
 
-    /**
-     * Add task
-     *
-     * @param \CoreBundle\Entity\Task $task
-     *
-     * @return Project
-     */
-    public function addTask(\CoreBundle\Entity\Task $task)
+    public function setTasks($tasks)
     {
-        $this->tasks[] = $task;
+        $this->tasks = $tasks;
 
         return $this;
     }
 
     /**
-     * Remove task
-     *
-     * @param \CoreBundle\Entity\Task $task
-     */
-    public function removeTask(\CoreBundle\Entity\Task $task)
-    {
-        $this->tasks->removeElement($task);
-    }
-
-    /**
      * Get tasks
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return array
      */
     public function getTasks()
     {
         return $this->tasks;
+    }
+
+    public function setResources($resources)
+    {
+        $this->resources = $resources;
+
+        return $this;
+    }
+
+    public function getResources()
+    {
+        return $this->resources;
     }
 
     /**

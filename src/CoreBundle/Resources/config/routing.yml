@@ -23,3 +23,8 @@ core_task:
     defaults: 
         _controller:    CoreBundle:Default:task
         id:             null
+
+core_task_delete:
+    path:   /task/delete/{id}
+    defaults:
+        _controller: CoreBundle:Default:deleteTask

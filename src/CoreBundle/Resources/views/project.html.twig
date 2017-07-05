@@ -17,7 +17,7 @@
 			{% if is_granted('ROLE_CP') %}<th>Action</th>{% endif %}
 		</tr>
 
-		{% for project in projects %}
+		{% for project in app.user.projects %}
 		<tr>
 			<td>
 				{% if is_granted('ROLE_CP') %}<a href="{{ url('core_project_edit', { id: project.id }) }}">{% endif %}

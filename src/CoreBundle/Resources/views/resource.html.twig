@@ -8,8 +8,7 @@
 		<caption> Gestion des ressources </caption>
 		<tr> 
 			<th>Nom d'utilisateur</th> 
-			<th>Projet affectée</th> 
-			<th>Tâches affectée</th> 
+			<th>Rôle</th> 
 			{% if is_granted('ROLE_CP') %}<th>Action</th>{% endif %}
 		</tr>
 		
@@ -17,11 +16,10 @@
 		<tr>
 			<td>
 				{% if is_granted('ROLE_CP') %}<a href="{{ url('user_edit') }}">{% endif %}
-					{{ resource.name }}
+					{{ resource.username }}
 				{% if is_granted('ROLE_CP') %}</a>{% endif %}
 			</td>
-			<td>{{ resource.project }}</td>
-			<td>{{ resource.tasks }}</td>
+			<td>{{ resource.role }}</td>
 			{% if is_granted('ROLE_CP') %}
 			<td><a href="{{ url('user_delete', {'id': resource.id }) }}">Supprimer</a></td>
 			{% endif %}

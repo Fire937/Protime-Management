@@ -12,7 +12,7 @@
 
 		<caption> Accueil </caption>
 
-		{% for project in projects %}
+		{% for project in app.user.projects %}
 		<tr><td>{{ project.name }}</td></tr>
 		{% endfor %}
 

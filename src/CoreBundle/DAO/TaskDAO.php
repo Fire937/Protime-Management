@@ -15,7 +15,15 @@ class TaskDAO extends DAO
 	/**
 	 * Retourne toutes les tâches filles de la tache donnée en paramètre
 	 */
-	public function findTask(\CoreBundle\Entity\Task $task)
+	public function findByTask(\CoreBundle\Entity\Task $task)
+	{
+
+	}
+
+	/**
+	 * Update task, or insert it if already exists
+	 */
+	public function save(\CoreBundle\Entity\Task $task)
 	{
 
 	}

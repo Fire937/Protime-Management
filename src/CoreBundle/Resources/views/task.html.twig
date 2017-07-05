@@ -9,15 +9,22 @@
 			<th>Nom Tâche</th>
 			<th>Nom Projet</th>
 			<th>Avancement</th> 
+			<th>Action</th>
 		</tr>
 
 		{% for task in tasks %}
 		<tr>
-			<td>{{ task.name }}</td>
+			<td><a href="{{ url('core_task_edit', {'id': task.id}) }}">{{ task.name }}</a></td>
 			<td>{{ task.project.name }}</td> 
-			<td>{{ task.progress }}</td> 
+			<td>{{ task.progress }}%</td> 
+			<td><a href="{{ url('core_task_delete', {'id': task.id}) }}">Supprimer</a></td>
 		</tr>
 		{% endfor %}
 	</table>
 </div>
+
+{{ form_start(form) }}
+{{ form_widget(form) }}
+<input type="submit" value="Créer la tâche"/>
+{{ form_end(form) }}
 {% endblock %}

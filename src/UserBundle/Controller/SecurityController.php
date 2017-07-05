@@ -73,6 +73,14 @@ class SecurityController extends Controller
 			throw $this->createNotFoundException("Cette resource n'existe pas");
 		}
 
+		// Si la ressource a des projets affectés et n'est pas affectée aux projets du Chef de Projet
+		if (!empty($resource->getProjects())
+			&& !in_array($resource, $this->get('dao.user')->findByProjects($this->getUser()->getProjects()))) 
+		{
+			throw $this->createAccessDeniedException("Vous ne pouvez gérer que les resources affectées à vos projets, ou n'ayant pas de projet")
+		}
+
+		// On empêche les Chef de Projet de ce supprimer entre eux
 		if ($resource->getRole() === 'ROLE_CP') {
 			throw $this->createAccessDeniedException("Vous ne pouvez pas supprimer un Chef de Projet");
 		}
@@ -83,6 +91,9 @@ class SecurityController extends Controller
 		return $this->redirectToRoute('core_resource');
 	}
 
+	/**
+	 * Certaines redondances peuvent être observées, dans un projet plus large, il aurait été envisageable de créer des ParamConverters customisés...
+	 */
 	public function editAction($id)
 	{
 		if (!$this->get('security.authorization_checker')->isGranted('ROLE_CP')) {
@@ -93,6 +104,13 @@ class SecurityController extends Controller
 
 		if (!$resource) {
 			throw $this->createNotFoundException("Cette ressource n'existe pas");
+		}
+
+		// Si la ressource a des projets affectés et n'est pas affectée aux projets du Chef de Projet
+		if (!empty($resource->getProjects())
+			&& !in_array($resource, $this->get('dao.user')->findByProjects($this->getUser()->getProjects()))) 
+		{
+			throw $this->createAccessDeniedException("Vous ne pouvez gérer que les resources affectées à vos projets, ou n'ayant pas de projet")
 		}
 
 		if ($resource->getRole() === 'ROLE_CP') {

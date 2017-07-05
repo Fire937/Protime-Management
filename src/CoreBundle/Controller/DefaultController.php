@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 use CoreBundle\Entity\Project;
 
@@ -14,9 +15,6 @@ class DefaultController extends Controller
 {
 	public function indexAction()
 	{
-		$user = $this->getUser();
-		$projects = $this->get('dao.project')->findByUser($user);
-
 		return $this->render('CoreBundle::index.html.twig', array(
 			'projects' => $projects,
 			));
@@ -24,9 +22,6 @@ class DefaultController extends Controller
 
 	public function projectAction(Request $request)
 	{
-		$user = $this->getUser();
-		$projects = $this->get('dao.project')->findByUser($user);
-
 		// On affiche le formulaire de création de projet seulement si l'utilisateur a le rôle chef de projet
 		if ($this->get('security.authorization_checker')->isGranted('ROLE_CP'))
 		{
@@ -34,9 +29,7 @@ class DefaultController extends Controller
 			$createProjectForm = $this->createForm(FormType::class, $project)
 				->add('name')
 				->add('responsible', ChoiceType::class, array(
-					'choices' => array(
-						// Toutes les ressources de type Directeur de Projet, le chef de projet peut les y assigner
-						)
+					'choices' => $this->get('dao.user')->findByRole('ROLE_DP') // Tous les directeurs de projet
 					))
 				->add('costToDeliver')
 				->add('sellCost')
@@ -48,6 +41,7 @@ class DefaultController extends Controller
 				&& $createProjectForm->isValid()) 
 			{
 				$project->setReferent($user);
+				$project->setResources(array($user, $project->getResponsible())); // On ajoute le Chef de Projet et le Directeur de Projet à la liste des ressources du projet
 
 				$this->get('dao.project')->save($project);
 
@@ -55,14 +49,11 @@ class DefaultController extends Controller
 			}
 
 			return $this->render('CoreBundle::project.html.twig', array(
-				'projects'          => $projects,
 				'createProjectForm' => $createProjectForm->createView(),
 			));
 		}
 
-		return $this->render('CoreBundle::project.html.twig', array(
-			'projects'			
-			));
+		return $this->render('CoreBundle::project.html.twig');
 	}
 
 	public function deleteProjectAction($id)
@@ -97,7 +88,6 @@ class DefaultController extends Controller
 			throw $this->createAccessDeniedException("Vous n'êtes pas le Chef de Projet");
 		}
 
-		// Yes, same form than in projectAction but creating a FormType is a pain
 		$editProjectForm = $this->createForm(FormType::class, $project)
 			->add('name')
 			->add('responsible', ChoiceType::class, array(
@@ -127,28 +117,135 @@ class DefaultController extends Controller
 
 	public function resourceAction()
 	{
-		// Les chefs de projets ne font pas partie de la liste des resources, les chefs de projets ne peuvent pas se gérer entre eux.
-		$resources = $this->get('dao.user')->findResources();
+		// Toutes les resources faisant parties des projets de l'utilisateur
+		$resources = $this->get('dao.user')->findByProjects($this->getUser()->getProjects());
 
 		return $this->render('CoreBundle::resource.html.twig', array(
 			'resources' => $resources,
 			));
 	}
 
-	public function taskAction($id)
+	public function taskAction($id, Request $request)
 	{
 		// La tâche parente dans la hiérarchie
 		$task = $this->get('dao.task')->find($id);
+		$projects = $this->getUser()->getProjects()
 
-		if (!$task) {
-			$this->createNotFoundException("Cette tâche n'existe pas");
+		if (!$task) 
+		{
+			// Si la tâche n'existe pas, on retourne toutes les tâches appartenant aux projets de l'utilisateur, n'ayant pas de tâche parente, c'est à dire à la racine des projets.
+			$tasks = $this->get('dao.task')->findByProjects($projects);
+		}
+		// Si la tâche existe, il faut vérifier que l'utilisateur fait bien partie du projet
+		else if (!in_array($task->getProject(), $projects))
+		{
+			// Sinon, l'utilisateur se voit refuser l'accès
+			// À noter que même les Chef de Projet ne peuvent consulter que leurs propres projets
+			throw $this->createNotFoundException("Vous n'êtes pas affecté à ce projet");	
+		}
+		else
+		{
+			// Les tâches filles
+			$tasks = $this->get('dao.task')->findByTask($task);
 		}
 
-		// Les tâches filles
-		$tasks = $this->get('dao.task')->findTasks($task);
+		// Seul un chef de projet peut modifier la tâche
+		if ($this->get('security.authorization_checker')->isGranted('ROLE_CP'))
+		{
+			$createTaskForm = $this->createForm(FormType::class, $newTask)
+				->add('name')
+				->add('initialWorkload')
+				->add('consumedWorkload')
+				->add('leftToDo')
+				;
+
+			// Si l'utilisateur est à la racine de la hiérarchie, on lui demande de choisir le projet auquel apprtient la tâche.
+			// Sinon, on créé la tâche comme étant la fille de la tâche parente dans laquelle on se trouve
+			if (!$task) 
+			{
+				$createTaskForm->add('project', ChoiceType::class, array(
+					'choices' => $this->getUser()->getProjects(),
+					));
+			}
+
+			if ($createTaskForm->handleRequest($request)->isSubmitted()
+				&& $createTaskForm->isValid())
+			{
+				$newTask->setTask($task); // Sera nul si la tâche est à la racine
+
+				$this->get('dao.task')->save($newTask);
+				$this->addFlash('success', "La tâche à été créée avec succès");
+
+				return $this->redirectToRoute('core_task');
+			}
+
+			return $this->render('CoreBundle::task.html.twig', array(
+				'tasks' => $tasks,
+				'form'  => $createTaskForm->createView(),
+				));
+		}
 
 		return $this->render('CoreBundle::task.html.twig', array(
 			'tasks' => $tasks
+			));
+	}
+
+	public function deleteTaskAction($id)
+	{
+		$task = $this->get('dao.task')->find($id);
+
+		if ($task === null) {
+			throw $this->createNotFoundException("Cette tâche n'existe pas");
+		}
+
+		if ($task->getProject()->getReferent() !== $this->getUser()) {
+			// L'utilisateur n'a pas les droits sur la tâche
+			throw $this->createAccessDeniedException("Vous n'êtes pas le Chef de Projet");
+		}
+
+		$this->get('dao.task')->delete($task);
+		$this->addFlash('success', "La tâche a été supprimé avec succès");
+
+		return $this->redirectToRoute('core_task');
+	}
+
+	public function editTaskAction($id, Request $request)
+	{
+		$task = $this->get('dao.task')->find($id);
+
+		if ($task === null) {
+			throw $this->createNotFoundException("Cette tâche n'existe pas");
+		}
+
+		if ($task->getProject()->getReferent() !== $this->getUser()) {
+			// L'utilisateur n'a pas les droits sur la tâche
+			throw $this->createAccessDeniedException("Vous n'êtes pas le Chef de Projet");
+		}
+
+		// note: Un Chef de Projet ne pourra modifier la hiérarchie de la tâche après la création de cette dernière
+		$editTaskForm = $this->createForm(FormType::class, $task)
+			->add('name')
+			->add('initialWorkload')
+			->add('consumedWorkload')
+			->add('leftToDo')
+			->add('resources', ChoiceType::class, array(
+				'choices' 	=> $task->getProject()->getResources(),
+				'label'	 	=> 'username',
+				'multiple' 	=> true,
+				))
+			;
+
+		if ($editTaskForm->handleRequest($request)->isSubmitted() 
+			&& $editTaskForm->isValid()) 
+		{
+			$this->get('dao.task')->save($task);
+			$this->addFlash('success', "La tâche a été modifiée avec succès");
+
+			return $this->redirectToRoute('core_task');
+		}
+
+		return $this->render('CoreBundle::edit-task.html.twig', array(
+			'editTaskForm' => $editTaskForm->createView()
 			));
 	}
 }

@@ -28,11 +28,20 @@ class UserDAO extends DAO
 	}
 
 	/**
-	 * Returns all user with ROLE_DP or ROLE_DEV
+	 * Retourne toutes les resources affectées aux projets donnés en paramètre
 	 *
+	 * @param array A list of projects
 	 * @return array
 	 */
-	public function findResources()
+	public function findByProjects($projects)
+	{
+
+	}
+
+	/**
+	 * Retourne tous les utilisateurs ayant un certain rôle (ex: ROLE_DP)
+	 */
+	public function findByRole($role)
 	{
 
 	}

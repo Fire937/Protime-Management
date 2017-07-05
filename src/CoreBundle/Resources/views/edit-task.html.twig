@@ -1,0 +1,10 @@
+{% extends 'CoreBundle::layout.html.twig' %}
+
+{% block content %}
+{{ form_start(editTaskForm) }}
+{{ form_widget(editTaskForm) }}
+<div>
+	<input type="submit" value="Modifier la tâche/>
+</div>
+{{ form_end(editTaskForm) }}
+{% endblock %}

@@ -14,50 +14,41 @@ class Task
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
 
     /**
      * @var float
-     *
-     * @ORM\Column(name="initial_workload", type="float")
      */
     private $initialWorkload;
 
     /**
      * @var float
-     *
-     * @ORM\Column(name="consumed_workload", type="float")
      */
     private $consumedWorkload;
 
     /**
      * @var float
-     *
-     * @ORM\Column(name="left_to_do", type="float")
      */
     private $leftToDo;
   
     /**
-     * @ORM\ManyToOne(targetEntity="Project", inversedBy="tasks")
-     * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
+     * @var \CoreBundle\Entity\Project
      */
     private $project;
+
+    /**
+     * @var \CoreBundle\Entity\Task La tâche parente
+     */
+    private $task;
     
     /**
-     * Many Tasks have Many Resources.
-     * @ORM\ManyToMany(targetEntity="UserBundle\Entity\Resource", mappedBy="tasks")
+     * @var array A list containing \UserBundle\Entity\User objects
      */
     private $resources;
 
@@ -67,7 +58,9 @@ class Task
     
     private $progress;
 
-    public function __construct() {
+    public function __construct() 
+    {
+        // @todo Will have to put calculations here
         $this->estimatedWorkload = 0;
         $this->gain = 0;
         $this->progress = 0;

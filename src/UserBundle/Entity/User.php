@@ -39,6 +39,8 @@ class User implements UserInterface, EquatableInterface
 	 */
 	private $role;
 
+	private $projects;
+
 	public function eraseCredentials()
 	{
 	}
@@ -157,6 +159,18 @@ class User implements UserInterface, EquatableInterface
 	public function getRoles()
 	{
 		return array($this->role);
+	}
+
+	public function setProjects($projects)
+	{
+		$this->projects = $projects;
+
+		return $this;
+	}
+
+	public function getProjects()
+	{
+		return $this->projects;
 	}
 
 	public function isEqualTo(UserInterface $user)

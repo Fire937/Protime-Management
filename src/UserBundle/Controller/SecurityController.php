@@ -77,7 +77,7 @@ class SecurityController extends Controller
 		if (!empty($resource->getProjects())
 			&& !in_array($resource, $this->get('dao.user')->findByProjects($this->getUser()->getProjects()))) 
 		{
-			throw $this->createAccessDeniedException("Vous ne pouvez gérer que les resources affectées à vos projets, ou n'ayant pas de projet")
+			throw $this->createAccessDeniedException("Vous ne pouvez gérer que les resources affectées à vos projets, ou n'ayant pas de projet");
 		}
 
 		// On empêche les Chef de Projet de ce supprimer entre eux
@@ -110,7 +110,7 @@ class SecurityController extends Controller
 		if (!empty($resource->getProjects())
 			&& !in_array($resource, $this->get('dao.user')->findByProjects($this->getUser()->getProjects()))) 
 		{
-			throw $this->createAccessDeniedException("Vous ne pouvez gérer que les resources affectées à vos projets, ou n'ayant pas de projet")
+			throw $this->createAccessDeniedException("Vous ne pouvez gérer que les resources affectées à vos projets, ou n'ayant pas de projet");
 		}
 
 		if ($resource->getRole() === 'ROLE_CP') {

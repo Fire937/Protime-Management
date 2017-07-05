@@ -15,9 +15,7 @@ class DefaultController extends Controller
 {
 	public function indexAction()
 	{
-		return $this->render('CoreBundle::index.html.twig', array(
-			'projects' => $projects,
-			));
+		return $this->render('CoreBundle::index.html.twig');
 	}
 
 	public function projectAction(Request $request)
@@ -129,7 +127,7 @@ class DefaultController extends Controller
 	{
 		// La tâche parente dans la hiérarchie
 		$task = $this->get('dao.task')->find($id);
-		$projects = $this->getUser()->getProjects()
+		$projects = $this->getUser()->getProjects();
 
 		if (!$task) 
 		{

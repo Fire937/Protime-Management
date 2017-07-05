@@ -34,9 +34,10 @@ class SecurityController extends Controller
 	public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
 	{
 		// Pareil, si l'utilisateur est déjà connecté, il n'a pas besoin de créer un compte, on le redirige
-		if (!$this->get('security.authorization_checker')->isGranted('ROLE_CP')) {
+		/*if (!$this->get('security.authorization_checker')->isGranted('ROLE_CP')) {
 			throw $this->createAccessDeniedException("Vous n'êtes pas un Chef de Projet");
-		}
+		}*/
+		// Pour des raison de facilitations de test et de développement, il est possible d'enregistrer un utilisateur en tant qu'anonyme
 
 		// Sinon on lance le processus de création d'utilisateur
 		$user = new User();

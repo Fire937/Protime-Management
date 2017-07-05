@@ -19,11 +19,6 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        # for devlopment, disables security
-        ignore:
-            pattern: ^/
-            anonymous: ~
-
         register:
             pattern:      ^/register
             anonymous:    ~

@@ -20,6 +20,11 @@ class TaskDAO extends DAO
 
 	}
 
+	public function findByProjects($projects)
+	{
+		
+	}
+
 	/**
 	 * Update task, or insert it if already exists
 	 */

@@ -14,9 +14,7 @@ class UserDAO extends DAO
 	 */
 	public function find($id)
 	{	
-		// TODO: find that DB object...
 		$db = $this->getDb()->getMysqli();
-		error_log($id);
 		$sql = "SELECT * FROM user WHERE id = $id";
 		$row = $db->query($sql)->fetch_assoc();
 		return $this->buildObject($row);
@@ -94,11 +92,14 @@ class UserDAO extends DAO
 		$stmt->execute();
 	}
 
+	public function delete(User $user)
+	{
+		
+	}
+
 	protected function buildObject($row)
 	{
 		$user = new User();
-
-		error_log(print_r($row, true));
 
 		$user
 			->setId($row['id'])
@@ -111,17 +112,6 @@ class UserDAO extends DAO
 			//TODO: use project dao in order to inject projects here => findProjectsByUser
 			//->setProjects()
 			;
-
-		/*$user->setUsername($row['username']);
-		error_log('1');
-		$user->setEmail($row['email']);
-		$user->setFirstName($row['first_name']);
-		$user->setLastName($row['last_name']);
-		$user->setPassword($row['password']);
-		$user->setRole($row['role']);*/
-
-		error_log('uh');
-		error_log(print_r($user, true));
 
 		return $user;
 	}

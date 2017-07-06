@@ -23,6 +23,8 @@ class DBAL
 			// La connexion à échouée
 			throw new \RuntimeException("La connexion à la base de donnée a échoué: ".$this->mysqli->connect_error);
 		}
+
+		$this->mysqli->set_charset('utf8');
 	}
 
 	public function __destruct()

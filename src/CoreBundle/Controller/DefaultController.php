@@ -89,7 +89,8 @@ class DefaultController extends Controller
 		$editProjectForm = $this->createForm(FormType::class, $project)
 			->add('name')
 			->add('responsible', ChoiceType::class, array(
-				'choices' => $this->get('dao.user')->findByRole('ROLE_DP');
+				'choices' => $this->get('dao.user')->findByRole('ROLE_DP')
+				))
 			->add('costToDeliver')
 			->add('sellCost')
 			->add('gain')

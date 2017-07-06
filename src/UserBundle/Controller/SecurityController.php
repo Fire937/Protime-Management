@@ -11,7 +11,7 @@ use UserBundle\Entity\User;
 
 class SecurityController extends Controller
 {
-	public function loginAction(Request $request)
+	public function loginAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
 	{
 		// Si l'utilisateur est déjà connecté, on le redirige vers la page d'accueil
 		if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
@@ -46,7 +46,8 @@ class SecurityController extends Controller
 		if ($registrationForm->handleRequest($request)->isSubmitted() && $registrationForm->isValid()) 
 		{
 			// On hash le mot de passe (bcrypt)
-			$password = $passwordEncoder->encodePassword($user, $registrationForm->get('plainPassword')->getData()); 
+			$password = $passwordEncoder->encodePassword($user, $registrationForm->get('plainPassword')->getData());
+			//die($password);
 			$user->setPassword($password);
 
 			// On l'insert dans la base de donnée

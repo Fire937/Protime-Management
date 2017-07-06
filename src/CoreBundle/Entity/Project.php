@@ -78,6 +78,13 @@ class Project
         return $this->id;
     }
 
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     /**
      * Set name
      *
@@ -253,7 +260,7 @@ class Project
      *
      * @return Project
      */
-    public function setUserAverageNumber($resourceAverageNumber)
+    public function setResourceAverageNumber($resourceAverageNumber)
     {
         $this->resourceAverageNumber = $resourceAverageNumber;
 
@@ -265,7 +272,7 @@ class Project
      *
      * @return int
      */
-    public function getUserAverageNumber()
+    public function getResourceAverageNumber()
     {
         return $this->resourceAverageNumber;
     }

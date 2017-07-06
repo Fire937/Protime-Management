@@ -15,11 +15,11 @@ class UserDAO extends DAO
 	public function find($id)
 	{	
 		// TODO: find that DB object...
-		$conn = new UserDAO;
-		$db = $conn->getDb();
+		$db = $this->getDb()->getMysqli();
+		error_log($id);
 		$sql = "SELECT * FROM user WHERE id = $id";
-		$rows = $db->query($sql);
-		return $this->buildObject($rows);
+		$row = $db->query($sql)->fetch_assoc();
+		return $this->buildObject($row);
 	}
 
 	/**
@@ -29,11 +29,11 @@ class UserDAO extends DAO
 	 */
 	public function findByUsername($username)
 	{
-		$conn = new DOA;
-		$db = $conn->getDb();
-		$sql = "SELECT * FROM user WHERE username = $username";
-		$rows = $db->query($sql);
-		return $this->buildObject($rows);
+		$db = $this->getDb()->getMysqli();
+		$sql = "SELECT * FROM user WHERE username = '$username'";
+		$row = $db->query($sql)->fetch_assoc();
+
+		return $this->buildObject($row);
 	}
 
 	/**
@@ -56,11 +56,15 @@ class UserDAO extends DAO
 	 */
 	public function findByRole($role)
 	{
-		$conn = new DOA;
-		$db = $conn->getDb();
-		$sql = "SELECT * FROM user WHERE role = $role";
-		$rows = $db->query($sql);
-		return $this->buildObject($rows);
+		$db = $this->getDb()->getMysqli();
+		$sql = "SELECT * FROM user WHERE role = '$role'";
+		$rows = $db->query($sql)->fetch_all(MYSQLI_ASSOC);
+
+		foreach ($rows as $row) {
+			$row = $this->buildObject($row);
+		}
+
+		return $rows;
 	}
 
 	/**
@@ -69,25 +73,56 @@ class UserDAO extends DAO
 	public function save(User $user)
 	{	
 		$exist =  ($this->find($user->getId()) == null ? true : false);
-		$conn = new DOA;
-		$db = $conn->getDb();
+		$db = $this->getDb()->getMysqli();
+
+		$username = $user->getUsername();
+		$email = $user->getEmail();
+		$firstName = $user->getFirstName();
+		$lastName = $user->getLastName();
+		$role = $user->getRole();
+		$password = $user->getPassword();
+		$id = $user->getId();
+
 		if ($exist) {
-			$stmt = $db->prepare("INSERT INTO user SET username = ?, email = ?, first_name = ?, last_name = ?,  role = ? WHERE publish_date > ?");
-		} elseif (!$exist) {
-			$stmt = $db->prepare("INSERT INTO user (username, email, first_name, last_name, role) VALUES (?, ?, ?, ?, ?) WHERE publish_date > ?");
+			$stmt = $db->prepare("UPDATE user SET username = ?, email = ?, first_name = ?, last_name = ?,  role = ?, password = ? WHERE id = ?");
+			$stmt->bind_param('ssssssi', $username, $email, $firstName, $lastName, $role, $password, $id);
+		} else {
+			$stmt = $db->prepare("INSERT INTO user (username, email, first_name, last_name, password, role) VALUES (?, ?, ?, ?, ?, ?)");
+			$stmt->bind_param('ssssss', $username, $email, $firstName, $lastName, $password, $role);
 		}
 		
-		$stmt->bindValue(1, $user->getUsername());
-		$stmt->bindValue(2, $user->getEmail());
-		$stmt->bindValue(3, $user->getFirstName());
-		$stmt->bindValue(4, $user->getLastName());
-		$stmt->bindValue(5, $user->getRole());
-		$stmt->bindValue(6, $id);
-		
-		$rows = $stmt->execute($sql);
+		$stmt->execute();
 	}
 
 	protected function buildObject($row)
 	{
+		$user = new User();
+
+		error_log(print_r($row, true));
+
+		$user
+			->setId($row['id'])
+			->setUsername($row['username'])
+			->setEmail($row['email'])
+			->setFirstName($row['first_name'])
+			->setLastName($row['last_name'])
+			->setPassword($row['password'])
+			->setRole($row['role'])
+			//TODO: use project dao in order to inject projects here => findProjectsByUser
+			//->setProjects()
+			;
+
+		/*$user->setUsername($row['username']);
+		error_log('1');
+		$user->setEmail($row['email']);
+		$user->setFirstName($row['first_name']);
+		$user->setLastName($row['last_name']);
+		$user->setPassword($row['password']);
+		$user->setRole($row['role']);*/
+
+		error_log('uh');
+		error_log(print_r($user, true));
+
+		return $user;
 	}
 }
